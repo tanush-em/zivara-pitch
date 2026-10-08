@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zivara — Founder Vision & Business Strategy Report</title>
+<meta name="description" content="Founder vision, market thesis, business model, MVP, GTM, roadmap and research findings for Zivara, a proposed local jewellery discovery, rental and buying marketplace.">
+<style>
+:root{
+  --ink:#171717;--muted:#666;--line:#e7e3dc;--paper:#fbfaf7;--card:#fff;
+  --accent:#9a6b32;--accent2:#6f4a20;--soft:#f3ede4;--green:#2f6f55;--red:#9d4545;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}
+a{color:var(--accent2)}
+.container{max-width:1120px;margin:auto;padding:0 28px}
+.hero{background:linear-gradient(135deg,#21180f 0%,#4a3019 55%,#8a5d2c 100%);color:#fff;padding:90px 0 78px}
+.eyebrow{letter-spacing:.18em;text-transform:uppercase;font-size:12px;opacity:.78}
+.hero h1{font-family:Georgia,serif;font-weight:500;font-size:clamp(46px,7vw,82px);line-height:.95;margin:16px 0}
+.hero .tag{font-size:22px;max-width:760px;color:#f3eadc}
+.meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}
+.pill{border:1px solid rgba(255,255,255,.25);padding:7px 12px;border-radius:999px;font-size:13px}
+nav{position:sticky;top:0;z-index:10;background:rgba(251,250,247,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.navinner{display:flex;gap:18px;overflow:auto;padding:13px 28px;max-width:1120px;margin:auto}
+nav a{text-decoration:none;color:#4b443b;white-space:nowrap;font-size:13px}
+section{padding:60px 0;border-bottom:1px solid var(--line)}
+h2{font-family:Georgia,serif;font-size:34px;font-weight:500;margin:0 0 18px}
+h3{font-size:20px;margin:28px 0 10px}
+h4{font-size:15px;text-transform:uppercase;letter-spacing:.08em;color:var(--accent2);margin:25px 0 8px}
+.lead{font-size:19px;color:#3f3a34;max-width:900px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:25px 0}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin:25px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px;box-shadow:0 5px 18px rgba(0,0,0,.025)}
+.card strong{display:block;margin-bottom:7px}
+.callout{background:var(--soft);border-left:4px solid var(--accent);padding:22px 24px;border-radius:0 14px 14px 0;margin:24px 0}
+.warning{background:#fff1f1;border-left-color:var(--red)}
+.success{background:#eef7f2;border-left-color:var(--green)}
+.quote{font-family:Georgia,serif;font-size:25px;line-height:1.35;padding:28px 0;color:#49331c}
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+th,td{padding:13px 14px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:#f4f0e9;font-size:13px;text-transform:uppercase;letter-spacing:.05em}
+tr:last-child td{border-bottom:0}
+.badge{display:inline-block;padding:4px 9px;border-radius:999px;background:#eee8de;font-size:12px;margin:2px}
+.kpi{font-size:30px;font-family:Georgia,serif;color:var(--accent2)}
+ol,ul{padding-left:22px}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:22px 0}
+.flow span{background:#fff;border:1px solid var(--line);padding:10px 14px;border-radius:10px}
+.arrow{color:var(--accent);font-weight:bold}
+.timeline{border-left:2px solid var(--accent);padding-left:22px}
+.timeline .phase{position:relative;margin:0 0 30px}
+.timeline .phase:before{content:"";position:absolute;left:-30px;top:6px;width:12px;height:12px;background:var(--accent);border-radius:50%}
+.small{font-size:13px;color:var(--muted)}
+footer{padding:50px 0 80px;color:var(--muted);font-size:13px}
+@media(max-width:800px){.grid,.grid2{grid-template-columns:1fr}.hero{padding:65px 0}.container{padding:0 18px}.navinner{padding-left:18px}}
+@media print{nav{display:none}.hero{padding:45px 0}section{break-inside:avoid}.card{box-shadow:none}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+<div class="container">
+<div class="eyebrow">Founder Vision & Strategy Document · October 2026</div>
+<h1>Zivara</h1>
+<p class="tag">A local jewellery discovery marketplace connecting customers with trusted jewellery stores for discovery, rental, purchase and eventually styling.</p>
+<div class="meta">
+<span class="pill">Working brand name</span>
+<span class="pill">Initial market: Chennai</span>
+<span class="pill">Asset-light marketplace</span>
+<span class="pill">Rental + Buy</span>
+</div>
+</div>
+</header>
+
+<nav><div class="navinner">
+<a href="#executive">Executive</a><a href="#thesis">Thesis</a><a href="#market">Market</a><a href="#problem">Problem</a>
+<a href="#product">Product</a><a href="#business">Business Model</a><a href="#gtm">GTM</a><a href="#mvp">MVP</a>
+<a href="#roadmap">Roadmap</a><a href="#ai">AI</a><a href="#metrics">Metrics</a><a href="#risks">Risks</a>
+<a href="#brand">Brand</a><a href="#research">Research</a>
+</div></nav>
+
+<main>
+
+<section id="executive">
+<div class="container">
+<h2>1. Executive Summary</h2>
+<p class="lead">The original idea is to create a gallery-like application for premium imitation / “master-copy” jewellery by aggregating inventory from local jewellery shops, initially starting with one partner store and then onboarding shops one by one.</p>
+<div class="callout">
+<strong>Core thesis</strong>
+The opportunity is not simply to build a jewellery rental app. The stronger opportunity is to build the <strong>discovery and commerce layer for fragmented local jewellery inventory</strong>: discover → compare → reserve → rent or buy → eventually style.
+</div>
+<p>The proposed launch model is deliberately asset-light. Jewellery stores retain ownership of inventory and fulfillment. Zivara creates digital catalogues, demand, discovery, leads and eventually transactions. This avoids the capital burden of buying inventory and allows the business to validate demand before scaling.</p>
+<div class="grid">
+<div class="card"><span class="kpi">1</span><strong>Start with one shop</strong>Digitize a curated 100–200 piece collection.</div>
+<div class="card"><span class="kpi">1 city</span><strong>Own a micro-market first</strong>Prove the model in a tightly bounded Chennai area before expanding.</div>
+<div class="card"><span class="kpi">2 modes</span><strong>Rent + Buy</strong>Keep both transaction paths instead of becoming only a rental company.</div>
+</div>
+</div>
+</section>
+
+<section id="thesis">
+<div class="container">
+<h2>2. The Business Thesis</h2>
+<p class="lead">Zivara should be thought of as “Pinterest / Instagram-style discovery + local jewellery marketplace + rental infrastructure,” rather than as another jewellery store.</p>
+<div class="quote">“Discover jewellery near you. Rent it for the moment. Buy it if you love it.”</div>
+<h3>The long-term company</h3>
+<p><strong>Consumer layer:</strong> a highly visual jewellery discovery experience.</p>
+<p><strong>Commerce layer:</strong> rental, purchase, reservation and eventually delivery.</p>
+<p><strong>Supply layer:</strong> a network of local stores whose fragmented inventory becomes searchable and discoverable.</p>
+<p><strong>Software layer:</strong> eventually provide participating stores with catalogue, inventory, leads, booking and analytics tools.</p>
+<div class="flow"><span>Local shops</span><b class="arrow">→</b><span>Zivara catalogue</span><b class="arrow">→</b><span>Discovery</span><b class="arrow">→</b><span>Enquiry</span><b class="arrow">→</b><span>Rent / Buy</span><b class="arrow">→</b><span>More shops</span></div>
+</div>
+</section>
+
+<section id="market">
+<div class="container">
+<h2>3. Market & Product-Market-Fit Hypothesis</h2>
+<p class="lead">There is evidence for the underlying behavior, but the exact Zivara model still needs direct customer and retailer validation.</p>
+<div class="grid2">
+<div class="card"><strong>Online jewellery tailwind</strong><p>A SEBI-hosted industry document citing CareEdge Research estimated India's online jewellery market at about ₹262 billion in CY24 and projected ₹743 billion by CY29, a 23.2% CAGR from CY24–CY29. The same source described online penetration as only around 4–5% at the time, indicating room for digital discovery and commerce. <a href="https://www.sebi.gov.in/sebi_data/attachdocs/may-2025/1746516612813_779.pdf" target="_blank">Source</a>.</p></div>
+<div class="card"><strong>Indian jewellery demand remains substantial</strong><p>The World Gold Council reported that India accounted for 22% of global jewellery demand in Q1 2026 and noted continued momentum in digital channels, while higher prices pushed mass-market consumers toward lighter-weight, lower-carat and studded jewellery. <a href="https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-india-focus-q1-2026" target="_blank">Source</a>.</p></div>
+<div class="card"><strong>Chennai already validates rental behavior</strong><p>Local businesses advertise bridal jewellery rental, online browsing, WhatsApp enquiry/booking, styling and delivery. This is strong evidence that customers already understand the rental proposition. It also means Zivara must differentiate through aggregation, discovery and convenience rather than merely offering rental. <a href="https://chennaijazz.com/" target="_blank">Jazz Collections</a> · <a href="https://www.fineshine.in/" target="_blank">Fine Shine</a>.</p></div>
+</div>
+<h3>What is validated vs. unvalidated</h3>
+<table>
+<tr><th>Hypothesis</th><th>Status</th><th>How to validate</th></tr>
+<tr><td>People want affordable statement/bridal jewellery</td><td><span class="badge">Supported</span></td><td>Existing Chennai rental businesses and industry data.</td></tr>
+<tr><td>People will discover jewellery digitally</td><td><span class="badge">Supported directionally</span></td><td>Existing online catalogues + Instagram/WhatsApp behavior; measure your own traffic and enquiries.</td></tr>
+<tr><td>Customers want to compare multiple shops in one place</td><td><span class="badge">Hypothesis</span></td><td>Interview 20–30 target customers; prototype test.</td></tr>
+<tr><td>Shops will share inventory with a marketplace</td><td><span class="badge">Hypothesis</span></td><td>Pitch 10 shops; secure one pilot before building deeply.</td></tr>
+<tr><td>Shops will pay commission</td><td><span class="badge">Hypothesis</span></td><td>Offer pay-per-success pilot and negotiate economics.</td></tr>
+<tr><td>Customers will transact online rather than only enquire</td><td><span class="badge">Hypothesis</span></td><td>Track enquiry → reservation → payment conversion.</td></tr>
+</table>
+</div>
+</section>
+
+<section id="problem">
+<div class="container">
+<h2>4. The Problem</h2>
+<div class="grid2">
+<div class="card"><h3>Customer pain</h3>
+<ul>
+<li>Jewellery discovery is fragmented across Instagram, WhatsApp and physical stores.</li>
+<li>Customers often have to contact several sellers to compare styles and prices.</li>
+<li>Rental availability and pricing can be difficult to understand quickly.</li>
+<li>Finding a complete matching look is harder than finding a single product.</li>
+<li>Customers may not know which stores are nearby or trustworthy.</li>
+</ul></div>
+<div class="card"><h3>Retailer pain</h3>
+<ul>
+<li>Large collections are difficult to expose digitally.</li>
+<li>Instagram and WhatsApp are useful but weak as inventory systems.</li>
+<li>Owners spend time repeatedly sending photos and prices.</li>
+<li>Local stores struggle to reach customers beyond their immediate network.</li>
+<li>There is limited structured data about what customers browse and request.</li>
+</ul></div>
+</div>
+<div class="callout success"><strong>The wedge:</strong> digitize inventory once, make it discoverable repeatedly, and send qualified demand back to the store.</div>
+</div>
+</section>
+
+<section id="product">
+<div class="container">
+<h2>5. Product Vision</h2>
+<h3>Core consumer experience</h3>
+<div class="flow"><span>Home</span><b class="arrow">→</b><span>Occasion / Style</span><b class="arrow">→</b><span>Gallery</span><b class="arrow">→</b><span>Product</span><b class="arrow">→</b><span>Rent / Buy / Reserve</span></div>
+<h3>Discovery taxonomy</h3>
+<p>
+<span class="badge">Wedding</span><span class="badge">Reception</span><span class="badge">Engagement</span><span class="badge">Party</span><span class="badge">Festival</span>
+<span class="badge">Temple</span><span class="badge">Kundan</span><span class="badge">Kemp</span><span class="badge">Antique</span><span class="badge">AD</span>
+<span class="badge">Choker</span><span class="badge">Haram</span><span class="badge">Jhumka</span><span class="badge">Bangles</span><span class="badge">Vanki</span>
+</p>
+<h3>“Looks” instead of only products</h3>
+<p>A major product improvement is to package complementary pieces into complete looks: for example, a South Indian Muhurtham look containing necklace + jhumka + vanki + bangles + maang tikka. This makes Zivara more useful for styling and increases basket size.</p>
+<h3>High-value future features</h3>
+<div class="grid">
+<div class="card"><strong>Visual search</strong>Upload an image and find visually similar pieces from nearby stores.</div>
+<div class="card"><strong>AI stylist</strong>Ask for jewellery based on saree, occasion, budget and aesthetic.</div>
+<div class="card"><strong>Local comparison</strong>Compare similar designs, rental price, purchase price and distance.</div>
+<div class="card"><strong>Availability</strong>See whether a piece is available for a specific date.</div>
+<div class="card"><strong>Complete looks</strong>Discover coordinated jewellery sets rather than isolated SKUs.</div>
+<div class="card"><strong>Retailer analytics</strong>Show shops views, enquiries, conversions and popular designs.</div>
+</div>
+</div>
+</section>
+
+<section id="business">
+<div class="container">
+<h2>6. Business Model</h2>
+<p class="lead">Start with the simplest revenue model that aligns Zivara with retailer success. Add SaaS and other revenue streams only after transaction volume exists.</p>
+<table>
+<tr><th>Revenue stream</th><th>How it works</th><th>When</th></tr>
+<tr><td><strong>Transaction commission</strong></td><td>Take a percentage of rental or purchase transactions generated by Zivara.</td><td>Start here</td></tr>
+<tr><td><strong>Qualified lead fee</strong></td><td>Retailer pays for a verified customer enquiry.</td><td>Early experiment</td></tr>
+<tr><td><strong>Retailer SaaS</strong></td><td>Monthly fee for digital catalogue, inventory, leads and analytics.</td><td>After product-market fit</td></tr>
+<tr><td><strong>Featured placement</strong></td><td>Sponsored discovery / promoted collections.</td><td>After traffic</td></tr>
+<tr><td><strong>Logistics fee</strong></td><td>Delivery / pickup / fulfillment margin.</td><td>Later</td></tr>
+</table>
+<div class="callout"><strong>Recommended starting principle:</strong> “You don't pay us unless we generate business.” This reduces retailer resistance and gives Zivara a strong pilot proposition.</div>
+<h3>Illustrative economics — not a forecast</h3>
+<p>Example only: a ₹4,000 rental at a 15% marketplace commission would generate ₹600 gross revenue to Zivara. A ₹10,000 purchase at 10% would generate ₹1,000. Actual take rates must be negotiated and validated by retailer interviews, margins, GST/tax treatment, refunds, payment costs and operational responsibilities.</p>
+</div>
+</section>
+
+<section id="gtm">
+<div class="container">
+<h2>7. Go-to-Market Strategy</h2>
+<h3>Supply-first launch</h3>
+<ol>
+<li>Identify 10 promising jewellery shops.</li>
+<li>Interview owners about inventory, rentals, purchases, Instagram, WhatsApp and customer acquisition.</li>
+<li>Select one responsive pilot partner.</li>
+<li>Digitize the best 100–200 pieces rather than attempting the entire inventory.</li>
+<li>Launch the catalogue and manually route enquiries to the partner.</li>
+<li>Measure transactions before aggressively onboarding more stores.</li>
+</ol>
+<h3>Consumer acquisition</h3>
+<div class="grid">
+<div class="card"><strong>Instagram / Reels</strong>“5 jewellery sets under ₹5K rental”, before/after looks, saree matching and bridal styling.</div>
+<div class="card"><strong>Wedding ecosystem</strong>Bridal boutiques, makeup artists, photographers, wedding planners, mehendi artists and venues.</div>
+<div class="card"><strong>Referral loops</strong>Customer referrals + retailer referrals + stylist referrals.</div>
+<div class="card"><strong>Local SEO</strong>Pages for “bridal jewellery rental in [area]”, “muhurtham jewellery”, etc.</div>
+<div class="card"><strong>WhatsApp</strong>Use it as a conversion channel initially rather than fighting existing customer habits.</div>
+<div class="card"><strong>Micro-influencers</strong>Chennai bridal/fashion creators with strong local trust rather than only large influencers.</div>
+</div>
+<h3>Geographic strategy</h3>
+<p>Do not start with “all Chennai.” Start with a manageable cluster or category, prove density, then expand: <strong>micro-market → Chennai → Tamil Nadu → South India → India.</strong></p>
+</div>
+</section>
+
+<section id="mvp">
+<div class="container">
+<h2>8. MVP Specification</h2>
+<div class="grid2">
+<div class="card"><h3>Customer MVP</h3>
+<ul>
+<li>Beautiful visual homepage</li>
+<li>Category / occasion browsing</li>
+<li>Search + filters</li>
+<li>Product detail page</li>
+<li>Rental price</li>
+<li>Purchase price where applicable</li>
+<li>Shop information + location</li>
+<li>Availability enquiry</li>
+<li>WhatsApp / reserve CTA</li>
+<li>Basic lead tracking</li>
+</ul></div>
+<div class="card"><h3>Admin MVP</h3>
+<ul>
+<li>Shop management</li>
+<li>Product CRUD</li>
+<li>Image management</li>
+<li>Rental / sale pricing</li>
+<li>Availability status</li>
+<li>Lead management</li>
+<li>Booking status</li>
+<li>Simple analytics</li>
+</ul></div>
+</div>
+<div class="callout warning"><strong>Do not overbuild.</strong> The first version does not need complex authentication, microservices, automated logistics, multi-agent AI, sophisticated payments or a retailer dashboard. Manually operate the difficult parts until demand is proven.</div>
+<h3>Suggested technical foundation</h3>
+<p>Next.js + TypeScript frontend, FastAPI or Node backend if needed, PostgreSQL or SQLite for the pilot, object storage for images, WhatsApp for conversion, and a simple admin interface. Architecture should remain replaceable; business validation is more important than technical sophistication at this stage.</p>
+</div>
+</section>
+
+<section id="roadmap">
+<div class="container">
+<h2>9. Product & Business Roadmap</h2>
+<div class="timeline">
+<div class="phase"><h3>Phase 0 — Discovery</h3><p>Interview 20–30 consumers and 10–15 retailers. Select the pilot shop. Establish pricing and commission hypotheses.</p></div>
+<div class="phase"><h3>Phase 1 — Catalogue</h3><p>One shop, 100–200 curated products, visual gallery, WhatsApp enquiries and manual fulfilment.</p></div>
+<div class="phase"><h3>Phase 2 — Marketplace</h3><p>5–20 shops, structured inventory, location discovery, comparison, reservations and transaction tracking.</p></div>
+<div class="phase"><h3>Phase 3 — Commerce</h3><p>Online payment, availability calendar, rental workflow, deposits, delivery/pickup integrations and customer accounts.</p></div>
+<div class="phase"><h3>Phase 4 — AI Discovery</h3><p>Visual search, outfit matching, AI stylist, personalized recommendations and complete-look generation.</p></div>
+<div class="phase"><h3>Phase 5 — Retailer Infrastructure</h3><p>Inventory management, CRM, analytics, customer insights, demand forecasting and a retailer SaaS product.</p></div>
+</div>
+</div>
+</section>
+
+<section id="ai">
+<div class="container">
+<h2>10. AI Opportunity</h2>
+<p class="lead">AI should enhance the marketplace after there is enough structured inventory and user behavior. It should not be the reason the first MVP exists.</p>
+<table>
+<tr><th>Capability</th><th>User experience</th><th>Data requirement</th></tr>
+<tr><td>Visual similarity</td><td>“Find jewellery like this photo.”</td><td>Good product images + embeddings</td></tr>
+<tr><td>Natural-language search</td><td>“Traditional gold-look set under ₹4,000 for my muhurtham.”</td><td>Structured catalogue metadata</td></tr>
+<tr><td>AI stylist</td><td>Recommend pieces based on saree, face/neckline, occasion and budget.</td><td>Product + style + user preference data</td></tr>
+<tr><td>Look builder</td><td>Build a complete coordinated jewellery set.</td><td>Compatibility / style relationships</td></tr>
+<tr><td>Personalization</td><td>Show users collections matching their behavior.</td><td>Interaction history</td></tr>
+<tr><td>Retail analytics</td><td>“These designs are getting attention but not converting.”</td><td>Events + transactions</td></tr>
+</table>
+</div>
+</section>
+
+<section id="metrics">
+<div class="container">
+<h2>11. Metrics That Matter</h2>
+<div class="grid">
+<div class="card"><span class="kpi">Supply</span><strong>Active shops</strong>Shops actively supplying inventory.</div>
+<div class="card"><span class="kpi">100–200</span><strong>Pilot SKUs</strong>Curated products for the first test.</div>
+<div class="card"><span class="kpi">CVR</span><strong>Enquiry → transaction</strong>The most important early conversion metric.</div>
+<div class="card"><span class="kpi">GMV</span><strong>Gross merchandise value</strong>Total transaction value flowing through Zivara.</div>
+<div class="card"><span class="kpi">CAC</span><strong>Customer acquisition cost</strong>What it costs to generate a transacting customer.</div>
+<div class="card"><span class="kpi">Repeat</span><strong>Repeat / referral rate</strong>Whether the marketplace creates lasting value.</div>
+</div>
+<h3>North-star candidate</h3>
+<div class="callout"><strong>Successful jewellery transactions generated through Zivara per month.</strong><br>Early on, this can be measured manually. Later it can become a complete GMV / contribution-margin dashboard.</div>
+</div>
+</section>
+
+<section id="risks">
+<div class="container">
+<h2>12. Risks & How to Handle Them</h2>
+<table>
+<tr><th>Risk</th><th>Why it matters</th><th>Mitigation</th></tr>
+<tr><td>Chicken-and-egg marketplace</td><td>No customers without supply; no supply without customers.</td><td>Start as a managed single-shop catalogue.</td></tr>
+<tr><td>Retailer resistance</td><td>Owners may fear losing customer relationships or revealing pricing.</td><td>“No upfront fee; we bring customers” pilot.</td></tr>
+<tr><td>Inventory accuracy</td><td>Unavailable pieces destroy trust.</td><td>Manual availability confirmation initially; later inventory sync.</td></tr>
+<tr><td>Fulfilment complexity</td><td>Rental involves pickup, return, cleaning, damage and deposits.</td><td>Keep fulfilment with stores initially.</td></tr>
+<tr><td>Low differentiation</td><td>A catalogue alone is easy to copy.</td><td>Build supply density, local data, discovery and retailer relationships.</td></tr>
+<tr><td>Counterfeit / IP risk</td><td>“Master copy” can become risky if positioned as branded replicas.</td><td>Use “premium imitation”, “designer-inspired” or style-based language; do not market counterfeit branding.</td></tr>
+<tr><td>Brand-name conflict</td><td>The preferred name may already be used.</td><td>Complete trademark, domain and social checks before public launch.</td></tr>
+</table>
+</div>
+</section>
+
+<section id="brand">
+<div class="container">
+<h2>13. Brand Direction — Zivara</h2>
+<div class="callout warning"><strong>Important:</strong> Zivara should currently be treated as a <strong>working brand name</strong>, not a cleared trademark. Current web research found a “Zivara” fashion house in Jaipur with a 2026 private preview, so legal and domain/social clearance is necessary before investing heavily in the identity. <a href="https://zivara.in/" target="_blank">Observed Zivara site</a>.</div>
+<p>The name is attractive because it is short, premium-sounding, not locked to rental, and could stretch into jewellery discovery, styling and retailer software.</p>
+<h3>Potential positioning</h3>
+<div class="grid">
+<div class="card"><strong>Zivara</strong><p>Discover jewellery near you.</p></div>
+<div class="card"><strong>Zivara</strong><p>Discover. Rent. Own.</p></div>
+<div class="card"><strong>Zivara</strong><p>Jewellery, your way.</p></div>
+<div class="card"><strong>Zivara</strong><p>Jewellery for your moments.</p></div>
+</div>
+<h3>Potential brand architecture</h3>
+<p><strong>Zivara Discover</strong> — catalogue and discovery<br>
+<strong>Zivara Rent</strong> — rentals<br>
+<strong>Zivara Shop</strong> — buying<br>
+<strong>Zivara Style</strong> — AI styling<br>
+<strong>Zivara for Business</strong> — retailer tools</p>
+</div>
+</section>
+
+<section id="founder">
+<div class="container">
+<h2>14. Founder Operating Plan</h2>
+<p class="lead">The founder's job in the first months is not to build the perfect app. It is to discover whether a repeatable local marketplace transaction can be created.</p>
+<h3>First 30 days</h3>
+<ol>
+<li>Talk to 10–15 jewellery retailers.</li>
+<li>Talk to 20–30 potential customers.</li>
+<li>Map current discovery, rental and purchase workflows.</li>
+<li>Select one pilot retailer.</li>
+<li>Digitize 100–200 products.</li>
+<li>Launch a polished web catalogue.</li>
+<li>Drive the first 100–300 visitors manually.</li>
+<li>Track every enquiry and transaction.</li>
+</ol>
+<h3>Questions every retailer should answer</h3>
+<ul>
+<li>How many jewellery enquiries arrive through Instagram and WhatsApp?</li>
+<li>What proportion of business is rental vs purchase?</li>
+<li>What are typical rental prices and durations?</li>
+<li>How is availability tracked?</li>
+<li>What are the most requested categories?</li>
+<li>What happens when a customer wants a design they do not stock?</li>
+<li>Would they share catalogue images and pricing?</li>
+<li>Would they pay commission for a transaction generated by Zivara?</li>
+<li>What would make them stop using the platform?</li>
+</ul>
+</div>
+</section>
+
+<section id="research">
+<div class="container">
+<h2>15. Current Research Findings</h2>
+<p>This section records findings checked during preparation of this document. Web information can change; use it as a research snapshot, not permanent truth.</p>
+<div class="grid2">
+<div class="card"><strong>Chennai rental market</strong><p>Jazz Collections advertises bridal rental jewellery, online/WhatsApp booking, delivery and a broad set of categories. It states rental pricing from roughly ₹2,500–₹8,000 depending on design/material/components. <a href="https://chennaijazz.com/" target="_blank">Source</a>.</p></div>
+<div class="card"><strong>Fine Shine</strong><p>Fine Shine in Chennai positions around fashion jewellery and rental, including reception and Muhurtham, with styling support and rental enquiries. <a href="https://www.fineshine.in/" target="_blank">Source</a>.</p></div>
+<div class="card"><strong>Little Fingers</strong><p>Little Fingers lists bridal rental sets from a Chennai location and supports online booking / enquiries, with examples around ₹4,000–₹8,500. <a href="https://www.littlefingersindia.com/product/lfbridalset131/" target="_blank">Source</a>.</p></div>
+<div class="card"><strong>Dithyas Farago</strong><p>Advertises Chennai rental jewellery for weddings, receptions, baby showers and photoshoots, with rental pricing starting from ₹900/day. <a href="https://dithyasfarago.in/rental-jewellery-in-chennai/" target="_blank">Source</a>.</p></div>
+</div>
+<h3>Local ecosystem examples</h3>
+<p>Search results also surface established local businesses across Chennai including rental, bridal and fashion jewellery operators. Examples include <strong>JAZZ COLLECTIONS</strong>, <strong>Ariyas Bridal Set</strong>, <strong>Mahalakshmi Fashion Jewellery</strong>, <strong>Alankrita Bridal Jewellery</strong>, and businesses in T. Nagar, Anna Nagar and Sowcarpet. This supports the thesis that supply is geographically distributed and potentially aggregatable, but individual stores must be evaluated directly before partnership outreach.</p>
+<p class="small">This report does not imply that any listed business has agreed to participate in Zivara. Business listings are research leads only.</p>
+</div>
+</section>
+
+<section id="next">
+<div class="container">
+<h2>16. Immediate Next Steps</h2>
+<div class="callout success">
+<strong>Do not build the full marketplace yet.</strong><br>
+The next milestone is not “launch the app.” It is: <strong>prove that one jewellery retailer will share inventory and that Zivara can generate qualified customer demand.</strong>
+</div>
+<ol>
+<li><strong>Brand validation:</strong> verify Zivara trademark, domain and social availability.</li>
+<li><strong>Retailer research:</strong> interview 10–15 Chennai shops.</li>
+<li><strong>Customer research:</strong> interview 20–30 target customers.</li>
+<li><strong>Pilot:</strong> secure one shop and 100–200 products.</li>
+<li><strong>MVP:</strong> launch visual catalogue + enquiry/WhatsApp workflow.</li>
+<li><strong>Demand test:</strong> use Instagram, wedding partners and local SEO.</li>
+<li><strong>Measure:</strong> views → enquiries → reservations → transactions.</li>
+<li><strong>Decision:</strong> only after evidence, expand to 5–20 shops.</li>
+</ol>
+</div>
+</section>
+
+<section>
+<div class="container">
+<h2>17. One-Sentence Vision</h2>
+<div class="quote">“Zivara will make local jewellery as easy to discover, compare, rent and buy as booking a restaurant or shopping online — while giving independent jewellery retailers a digital channel for inventory, customers and commerce.”</div>
+<p><strong>Long-term vision:</strong> become the discovery, commerce and software layer connecting India's fragmented jewellery retail ecosystem with modern consumers.</p>
+</div>
+</section>
+
+</main>
+
+<footer>
+<div class="container">
+<p><strong>Zivara Founder Vision & Strategy Report</strong> · Prepared October 2026.</p>
+<p>This document combines founder hypotheses, strategic recommendations and a limited current web research snapshot. Market size, competitor information, pricing, legal availability and business economics should be re-validated before investment or public launch.</p>
+<h3>Research sources</h3>
+<ul>
+<li><a href="https://www.sebi.gov.in/sebi_data/attachdocs/may-2025/1746516612813_779.pdf" target="_blank">SEBI-hosted industry document / CareEdge market data</a></li>
+<li><a href="https://www.gold.org/goldhub/research/gold-demand-trends/gold-demand-trends-india-focus-q1-2026" target="_blank">World Gold Council — India Gold Demand Trends Q1 2026</a></li>
+<li><a href="https://chennaijazz.com/" target="_blank">Jazz Collections — Chennai rental jewellery</a></li>
+<li><a href="https://www.fineshine.in/" target="_blank">Fine Shine — Chennai fashion/rental jewellery</a></li>
+<li><a href="https://www.littlefingersindia.com/product/lfbridalset131/" target="_blank">Little Fingers India — bridal rental example</a></li>
+<li><a href="https://dithyasfarago.in/rental-jewellery-in-chennai/" target="_blank">Dithyas Farago — Chennai rental jewellery</a></li>
+<li><a href="https://zivara.in/" target="_blank">Zivara Jaipur — current name-use check</a></li>
+</ul>
+</div>
+</footer>
+
+</body>
+</html>
