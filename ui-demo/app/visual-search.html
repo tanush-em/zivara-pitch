@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Visual Search — Zivara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/zivara.css">
+</head>
+<body>
+<main class="container" style="padding:28px 0 64px">
+  <div class="eyebrow">AI visual search</div>
+  <h1 class="h1">Find similar jewellery</h1>
+  <p class="lead mb-3">Upload or pick a demo image. We’ll return similar pieces with match scores.</p>
+  <div id="stage"></div>
+</main>
+<script src="assets/js/images.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderConsumerNav, mountDemoBanner, runAIProcess, productCard, scoreProduct, formatINR, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderConsumerNav("ai");
+
+  const demos = [
+    { id: "ZV001", label: "Kasu mala", src: D.getProduct("ZV001").images[0], prefs: { style: "temple", occasion: "wedding", colour: "gold", budget: 2500 } },
+    { id: "ZV003", label: "Kundan set", src: D.getProduct("ZV003").images[0], prefs: { style: "kundan", occasion: "wedding", colour: "gold", budget: 3500 } },
+    { id: "ZV009", label: "Jhumkas", src: D.getProduct("ZV009").images[0], prefs: { style: "jhumka", category: "earrings", occasion: "festival", budget: 1000 } },
+    { id: "ZV018", label: "Antique choker", src: D.getProduct("ZV018").images[0], prefs: { style: "temple", category: "choker", occasion: "wedding", budget: 1800 } },
+  ];
+
+  let selected = null;
+
+  function picker() {
+    $("#stage").innerHTML = `
+      <div class="upload-zone" id="zone">
+        <div class="eyebrow">Drop or choose</div>
+        <p class="muted mt-1">Select a demo reference image below, or upload your own (preview only).</p>
+        <input type="file" id="file" accept="image/*" class="hidden" />
+        <button class="btn btn-ghost btn-sm mt-2" type="button" id="pickFile">Upload image</button>
+        <img id="preview" class="hidden" alt="Preview" />
+      </div>
+      <div class="eyebrow mt-3">Or try a demo</div>
+      <div class="grid-4 mt-2" id="demos"></div>
+      <button class="btn btn-gold btn-block mt-3 hidden" type="button" id="analyze">Find similar</button>`;
+    $("#demos").innerHTML = demos.map(d => `
+      <button type="button" class="media-card" data-demo="${d.id}" style="text-align:left;border:2px solid transparent;padding:0">
+        <div class="media square"><img src="${d.src}" alt="${d.label}" loading="lazy" /></div>
+        <div class="meta"><div class="name">${d.label}</div></div>
+      </button>`).join("");
+
+    $("#pickFile").onclick = () => $("#file").click();
+    $("#file").onchange = () => {
+      const f = $("#file").files[0];
+      if (!f) return;
+      const url = URL.createObjectURL(f);
+      $("#preview").src = url;
+      $("#preview").classList.remove("hidden");
+      selected = { prefs: { style: "bridal", occasion: "wedding", budget: 3000, colour: "gold" }, src: url, label: f.name };
+      $("#analyze").classList.remove("hidden");
+    };
+    $("#demos").onclick = (e) => {
+      const b = e.target.closest("[data-demo]");
+      if (!b) return;
+      const d = demos.find(x => x.id === b.dataset.demo);
+      selected = d;
+      [...$("#demos").children].forEach(c => c.style.borderColor = c === b ? "var(--zivara-ink)" : "transparent");
+      $("#preview").src = d.src;
+      $("#preview").classList.remove("hidden");
+      $("#analyze").classList.remove("hidden");
+    };
+    $("#analyze").onclick = run;
+  }
+
+  async function run() {
+    if (!selected) return;
+    await runAIProcess($("#stage"), [
+      "Reading jewellery silhouette",
+      "Extracting style & finish cues",
+      "Scoring Chennai catalogue",
+      "Ranking closest matches",
+    ], 800);
+    const prefs = selected.prefs;
+    const ranked = D.products
+      .filter(p => p.id !== selected.id)
+      .map(p => {
+        const base = scoreProduct(p, prefs);
+        const catBoost = prefs.category && p.category === prefs.category ? 0.12 : 0;
+        const visual = Math.min(0.99, base + catBoost + (p.style.some(s => (prefs.style||"").includes(s)) ? 0.08 : 0));
+        const styleMatch = Math.round((visual * 0.9 + 0.05) * 100);
+        const colourMatch = Math.round((0.7 + (p.colour.includes(prefs.colour || "gold") ? 0.2 : 0)) * 100);
+        return { p, visual: Math.round(visual * 100), styleMatch, colourMatch };
+      })
+      .sort((a, b) => b.visual - a.visual)
+      .slice(0, 8);
+
+    $("#stage").innerHTML = `
+      <div class="row-between mb-3">
+        <div class="row gap-2">
+          <img src="${selected.src}" alt="" style="width:72px;height:72px;object-fit:cover;border-radius:8px" />
+          <div><div class="eyebrow">Query image</div><strong>${selected.label || "Upload"}</strong></div>
+        </div>
+        <button class="btn btn-ghost btn-sm" type="button" id="again">New search</button>
+      </div>
+      <div class="grid-2" id="results"></div>`;
+    $("#results").innerHTML = ranked.map(r => `
+      <a class="panel" href="product.html?id=${r.p.id}" style="display:grid;grid-template-columns:100px 1fr;gap:14px;align-items:center">
+        <img src="${r.p.images[0]}" alt="" style="width:100px;height:120px;object-fit:cover;border-radius:8px" />
+        <div>
+          <strong>${r.p.name}</strong>
+          <div class="muted" style="font-size:13px">Rent ${formatINR(r.p.rentalPrice)}</div>
+          <div class="mt-1" style="font-size:12px">
+            Visual ${r.visual}% · Style ${r.styleMatch}% · Colour ${r.colourMatch}%
+            <div class="score-bar"><span style="width:${r.visual}%"></span></div>
+          </div>
+        </div>
+      </a>`).join("");
+    $("#again").onclick = picker;
+  }
+
+  picker();
+});
+</script>
+</body>
+</html>

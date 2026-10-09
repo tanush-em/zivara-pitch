@@ -1,20 +1,13 @@
-{
-  "meta": {
-    "version": 1,
-    "updated": "2026-10-09",
-    "researchDoc": "IMAGE_RESEARCH.md",
-    "strategy": "Publicly licensed imagery from Unsplash, Pexels, and Wikimedia Commons. Demo visual representations only — not claims of exact SKU match. Prefer local downloads before public release.",
-    "licenceNotes": {
-      "unsplash": "https://unsplash.com/license",
-      "pexels": "https://www.pexels.com/license/",
-      "wikimedia": "Per-file Creative Commons; attribution required for BY/SA works"
-    }
-  },
+/* Auto-generated from image-manifest.json — do not hand-edit product URLs */
+window.ZIVARA_IMAGES = {
   "products": {
     "ZV001": {
       "name": "Kaveri Kasu Mala",
       "category": "necklace",
-      "style": ["temple", "bridal"],
+      "style": [
+        "temple",
+        "bridal"
+      ],
       "hero": "https://images.unsplash.com/photo-1758995115518-26f90aa61b97?auto=format&fit=crop&w=1600&q=80",
       "detail": "https://images.unsplash.com/photo-1758995115518-26f90aa61b97?auto=format&fit=crop&w=1200&q=80&crop=entropy",
       "lifestyle": "https://images.unsplash.com/photo-1762709414326-67c887a8dc98?auto=format&fit=crop&w=1200&q=80",
@@ -27,7 +20,10 @@
     "ZV002": {
       "name": "Meenakshi Temple Haram",
       "category": "necklace",
-      "style": ["temple", "bridal"],
+      "style": [
+        "temple",
+        "bridal"
+      ],
       "hero": "https://images.unsplash.com/photo-1758995115560-59c10d6cc28f?auto=format&fit=crop&w=1600&q=80",
       "detail": "",
       "lifestyle": "https://images.pexels.com/photos/12006824/pexels-photo-12006824.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -40,7 +36,10 @@
     "ZV003": {
       "name": "Sahana Kundan Statement",
       "category": "necklace",
-      "style": ["kundan", "bridal"],
+      "style": [
+        "kundan",
+        "bridal"
+      ],
       "hero": "https://images.pexels.com/photos/33154729/pexels-photo-33154729.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "detail": "https://images.pexels.com/photos/33154729/pexels-photo-33154729.jpeg?auto=compress&cs=tinysrgb&w=800",
       "lifestyle": "",
@@ -53,7 +52,10 @@
     "ZV004": {
       "name": "Polki Emerald Cascade",
       "category": "necklace",
-      "style": ["polki", "bridal"],
+      "style": [
+        "polki",
+        "bridal"
+      ],
       "hero": "https://images.pexels.com/photos/33547864/pexels-photo-33547864.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "detail": "",
       "lifestyle": "",
@@ -66,7 +68,10 @@
     "ZV005": {
       "name": "Varnika Bridal Gold Necklace",
       "category": "necklace",
-      "style": ["bridal", "temple"],
+      "style": [
+        "bridal",
+        "temple"
+      ],
       "hero": "https://images.pexels.com/photos/28347078/pexels-photo-28347078.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "detail": "https://images.pexels.com/photos/28347078/pexels-photo-28347078.jpeg?auto=compress&cs=tinysrgb&w=800",
       "lifestyle": "https://images.pexels.com/photos/30929038/pexels-photo-30929038.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -79,7 +84,9 @@
     "ZV006": {
       "name": "Aarna Bridal Craft Necklace",
       "category": "necklace",
-      "style": ["bridal"],
+      "style": [
+        "bridal"
+      ],
       "hero": "https://images.pexels.com/photos/32077588/pexels-photo-32077588.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "detail": "",
       "lifestyle": "",
@@ -92,7 +99,10 @@
     "ZV007": {
       "name": "Heritage Filigree Pendant",
       "category": "necklace",
-      "style": ["bridal", "modern"],
+      "style": [
+        "bridal",
+        "modern"
+      ],
       "hero": "https://images.unsplash.com/photo-1758995115659-06a6cb5787eb?auto=format&fit=crop&w=1600&q=80",
       "detail": "",
       "lifestyle": "",
@@ -105,7 +115,9 @@
     "ZV008": {
       "name": "Thulasi Heritage Necklace",
       "category": "necklace",
-      "style": ["traditional"],
+      "style": [
+        "traditional"
+      ],
       "hero": "https://upload.wikimedia.org/wikipedia/commons/4/4a/Indian_traditional_necklace.jpg",
       "detail": "",
       "lifestyle": "",
@@ -118,7 +130,11 @@
     "ZV009": {
       "name": "Thanjavur Heritage Jhumka",
       "category": "earrings",
-      "style": ["jhumka", "temple", "bridal"],
+      "style": [
+        "jhumka",
+        "temple",
+        "bridal"
+      ],
       "hero": "https://images.pexels.com/photos/28928621/pexels-photo-28928621.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "detail": "https://images.pexels.com/photos/28928621/pexels-photo-28928621.jpeg?auto=compress&cs=tinysrgb&w=800",
       "lifestyle": "https://images.pexels.com/photos/14825248/pexels-photo-14825248.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -131,7 +147,10 @@
     "ZV010": {
       "name": "Pearl Drop Temple Jhumka",
       "category": "earrings",
-      "style": ["jhumka", "temple"],
+      "style": [
+        "jhumka",
+        "temple"
+      ],
       "hero": "https://images.pexels.com/photos/14825248/pexels-photo-14825248.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "detail": "",
       "lifestyle": "",
@@ -144,7 +163,10 @@
     "ZV011": {
       "name": "Festival Colour Jhumka Pair",
       "category": "earrings",
-      "style": ["jhumka", "fashion"],
+      "style": [
+        "jhumka",
+        "fashion"
+      ],
       "hero": "https://upload.wikimedia.org/wikipedia/commons/f/ff/Jhumkas.jpg",
       "detail": "",
       "lifestyle": "",
@@ -157,7 +179,10 @@
     "ZV012": {
       "name": "Wedding Bell Jhumka",
       "category": "earrings",
-      "style": ["jhumka", "bridal"],
+      "style": [
+        "jhumka",
+        "bridal"
+      ],
       "hero": "https://commons.wikimedia.org/wiki/Special:FilePath/Ear_Ring_for_Indian_Wedding_1.jpg",
       "detail": "",
       "lifestyle": "",
@@ -170,7 +195,10 @@
     "ZV013": {
       "name": "Floral Drop Chandbali",
       "category": "earrings",
-      "style": ["chandbali", "bridal"],
+      "style": [
+        "chandbali",
+        "bridal"
+      ],
       "hero": "https://images.unsplash.com/photo-1758995115555-766abbd9a491?auto=format&fit=crop&w=1600&q=80",
       "detail": "",
       "lifestyle": "",
@@ -183,7 +211,10 @@
     "ZV014": {
       "name": "Antique Temple Bangle Stack",
       "category": "bangles",
-      "style": ["temple", "bridal"],
+      "style": [
+        "temple",
+        "bridal"
+      ],
       "hero": "https://images.unsplash.com/photo-1758995116383-f51775896add?auto=format&fit=crop&w=1600&q=80",
       "detail": "https://images.unsplash.com/photo-1758995119744-6454f091303f?auto=format&fit=crop&w=1200&q=80",
       "lifestyle": "https://images.pexels.com/photos/35327123/pexels-photo-35327123.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -196,7 +227,10 @@
     "ZV015": {
       "name": "Kalyani Classic Gold Bangles",
       "category": "bangles",
-      "style": ["bridal", "traditional"],
+      "style": [
+        "bridal",
+        "traditional"
+      ],
       "hero": "https://images.pexels.com/photos/37485314/pexels-photo-37485314.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "detail": "https://images.pexels.com/photos/37485313/pexels-photo-37485313.jpeg?auto=compress&cs=tinysrgb&w=1200",
       "lifestyle": "",
@@ -209,7 +243,9 @@
     "ZV016": {
       "name": "Bridal Coral Bangle Pair",
       "category": "bangles",
-      "style": ["bridal"],
+      "style": [
+        "bridal"
+      ],
       "hero": "https://images.pexels.com/photos/9808451/pexels-photo-9808451.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "detail": "",
       "lifestyle": "",
@@ -222,7 +258,10 @@
     "ZV017": {
       "name": "Festival Glass Bangle Set",
       "category": "bangles",
-      "style": ["fashion", "festival"],
+      "style": [
+        "fashion",
+        "festival"
+      ],
       "hero": "https://commons.wikimedia.org/wiki/Special:FilePath/Ornaments_of_any_indian_lady.jpg",
       "detail": "",
       "lifestyle": "https://images.pexels.com/photos/34021937/pexels-photo-34021937.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -235,7 +274,11 @@
     "ZV018": {
       "name": "Meenakshi Antique Choker",
       "category": "choker",
-      "style": ["choker", "temple", "bridal"],
+      "style": [
+        "choker",
+        "temple",
+        "bridal"
+      ],
       "hero": "https://images.unsplash.com/photo-1758995115785-d13726ac93f0?auto=format&fit=crop&w=1600&q=80",
       "detail": "",
       "lifestyle": "https://images.pexels.com/photos/30929038/pexels-photo-30929038.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -248,7 +291,10 @@
     "ZV019": {
       "name": "Reception Choker Collar",
       "category": "choker",
-      "style": ["choker", "bridal"],
+      "style": [
+        "choker",
+        "bridal"
+      ],
       "hero": "https://images.pexels.com/photos/30929038/pexels-photo-30929038.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "detail": "",
       "lifestyle": "",
@@ -261,7 +307,10 @@
     "ZV020": {
       "name": "Layered Bridal Choker Set",
       "category": "choker",
-      "style": ["choker", "bridal"],
+      "style": [
+        "choker",
+        "bridal"
+      ],
       "hero": "https://upload.wikimedia.org/wikipedia/commons/9/95/Necklace_set.jpg",
       "detail": "",
       "lifestyle": "",
@@ -274,7 +323,10 @@
     "ZV021": {
       "name": "Wedding Guest Choker",
       "category": "choker",
-      "style": ["choker", "guest"],
+      "style": [
+        "choker",
+        "guest"
+      ],
       "hero": "https://upload.wikimedia.org/wikipedia/commons/5/56/Jewelry_for_Indian_Wedding.jpg",
       "detail": "",
       "lifestyle": "",
@@ -287,7 +339,10 @@
     "ZV022": {
       "name": "Beaded Bridal Maang Tikka",
       "category": "maang-tikka",
-      "style": ["maang-tikka", "bridal"],
+      "style": [
+        "maang-tikka",
+        "bridal"
+      ],
       "hero": "https://images.pexels.com/photos/10954278/pexels-photo-10954278.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "detail": "",
       "lifestyle": "",
@@ -300,7 +355,10 @@
     "ZV023": {
       "name": "Classic Bridal Maang Tikka",
       "category": "maang-tikka",
-      "style": ["maang-tikka", "bridal"],
+      "style": [
+        "maang-tikka",
+        "bridal"
+      ],
       "hero": "https://images.pexels.com/photos/24549086/pexels-photo-24549086.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "detail": "",
       "lifestyle": "https://images.pexels.com/photos/24549086/pexels-photo-24549086.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -313,7 +371,10 @@
     "ZV024": {
       "name": "Polki Drop Maang Tikka",
       "category": "maang-tikka",
-      "style": ["maang-tikka", "polki"],
+      "style": [
+        "maang-tikka",
+        "polki"
+      ],
       "hero": "https://images.pexels.com/photos/8575184/pexels-photo-8575184.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "detail": "",
       "lifestyle": "",
@@ -326,7 +387,11 @@
     "ZV025": {
       "name": "Lakshmi Temple Bridal Set",
       "category": "complete-set",
-      "style": ["temple", "bridal", "set"],
+      "style": [
+        "temple",
+        "bridal",
+        "set"
+      ],
       "hero": "https://images.pexels.com/photos/28347078/pexels-photo-28347078.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "detail": "https://images.pexels.com/photos/33154729/pexels-photo-33154729.jpeg?auto=compress&cs=tinysrgb&w=1200",
       "lifestyle": "https://images.unsplash.com/photo-1762709414326-67c887a8dc98?auto=format&fit=crop&w=1200&q=80",
@@ -339,20 +404,26 @@
     "ZV026": {
       "name": "Complete Gold Bridal Ensemble",
       "category": "complete-set",
-      "style": ["bridal", "set"],
+      "style": [
+        "bridal",
+        "set"
+      ],
       "hero": "https://images.pexels.com/photos/29502924/pexels-photo-29502924.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "detail": "",
       "lifestyle": "",
       "source": "https://www.pexels.com/photo/elegant-gold-jewelry-set-with-necklace-and-earrings-29502924/",
       "licence": "Pexels License",
-      "photographer": "Yusuf Çelik",
+      "photographer": "Yusuf \u00c7elik",
       "aspectRatio": "1:1",
       "cropNotes": "Flat-lay set hero"
     },
     "ZV027": {
       "name": "Showroom Bridal Pairing Set",
       "category": "complete-set",
-      "style": ["bridal", "set"],
+      "style": [
+        "bridal",
+        "set"
+      ],
       "hero": "https://images.unsplash.com/photo-1640183298005-3a4497cc6a37?auto=format&fit=crop&w=1600&q=80",
       "detail": "",
       "lifestyle": "",
@@ -365,7 +436,10 @@
     "ZV028": {
       "name": "Beaded Armlet Bracelet",
       "category": "miscellaneous",
-      "style": ["bracelet", "fashion"],
+      "style": [
+        "bracelet",
+        "fashion"
+      ],
       "hero": "https://images.unsplash.com/photo-1626784215013-13322cb0e471?auto=format&fit=crop&w=1600&q=80",
       "detail": "",
       "lifestyle": "https://images.unsplash.com/photo-1587271511223-18b7ef9a327a?auto=format&fit=crop&w=1200&q=80",
@@ -378,7 +452,10 @@
     "ZV029": {
       "name": "Bridal Hand Accent Hathphool",
       "category": "miscellaneous",
-      "style": ["bridal", "hand-jewellery"],
+      "style": [
+        "bridal",
+        "hand-jewellery"
+      ],
       "hero": "https://images.unsplash.com/flagged/photo-1570055349452-29232699cc63?auto=format&fit=crop&w=1600&q=80",
       "detail": "",
       "lifestyle": "https://images.pexels.com/photos/30458518/pexels-photo-30458518.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -391,7 +468,11 @@
     "ZV030": {
       "name": "Festival Bangle Tower",
       "category": "miscellaneous",
-      "style": ["fashion", "festival", "bangles"],
+      "style": [
+        "fashion",
+        "festival",
+        "bangles"
+      ],
       "hero": "https://images.pexels.com/photos/34021937/pexels-photo-34021937.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "detail": "",
       "lifestyle": "https://images.pexels.com/photos/38556016/pexels-photo-38556016.jpeg?auto=compress&cs=tinysrgb&w=1200",
@@ -406,7 +487,10 @@
     "LOOK01": {
       "name": "Red Saree Temple Bridal",
       "occasion": "wedding",
-      "style": ["temple", "bridal"],
+      "style": [
+        "temple",
+        "bridal"
+      ],
       "hero": "https://images.unsplash.com/photo-1762709414326-67c887a8dc98?auto=format&fit=crop&w=1600&q=80",
       "source": "https://unsplash.com/photos/bride-in-red-attire-with-traditional-indian-jewelry-kd9r-N_vmcg",
       "licence": "Unsplash License",
@@ -417,7 +501,9 @@
     "LOOK02": {
       "name": "Maroon Saree Gold Cascade",
       "occasion": "wedding",
-      "style": ["bridal"],
+      "style": [
+        "bridal"
+      ],
       "hero": "https://images.unsplash.com/photo-1769500805415-0f9485e70e5b?auto=format&fit=crop&w=1600&q=80",
       "source": "https://unsplash.com/photos/a-bride-in-a-maroon-saree-and-gold-jewelry-v_iH6EOOuV4",
       "licence": "Unsplash License",
@@ -428,7 +514,10 @@
     "LOOK03": {
       "name": "Classic Red-Gold Bridal",
       "occasion": "wedding",
-      "style": ["bridal", "silk"],
+      "style": [
+        "bridal",
+        "silk"
+      ],
       "hero": "https://images.unsplash.com/photo-1570212773364-e30cd076539e?auto=format&fit=crop&w=1600&q=80",
       "source": "https://unsplash.com/photos/woman-wearing-wedding-sari-looking-downwards-T-PUQaJ8YEw",
       "licence": "Unsplash License",
@@ -439,7 +528,10 @@
     "LOOK04": {
       "name": "Green Silk Guest Look",
       "occasion": "wedding-guest",
-      "style": ["guest", "silk"],
+      "style": [
+        "guest",
+        "silk"
+      ],
       "hero": "https://images.unsplash.com/photo-1688382654723-a7366006519b?auto=format&fit=crop&w=1600&q=80",
       "source": "https://unsplash.com/photos/a-woman-wearing-a-green-sari-and-jewelry-Tu-aK8z8nQI",
       "licence": "Unsplash License",
@@ -450,7 +542,10 @@
     "LOOK05": {
       "name": "Emerald Saree Styling",
       "occasion": "wedding-guest",
-      "style": ["guest", "silk"],
+      "style": [
+        "guest",
+        "silk"
+      ],
       "hero": "https://images.unsplash.com/photo-1679006831648-7c9ea12e5807?auto=format&fit=crop&w=1600&q=80",
       "source": "https://unsplash.com/photos/a-woman-wearing-a-green-sari-and-jewelry-njVir8eVq1M",
       "licence": "Unsplash License",
@@ -461,7 +556,10 @@
     "LOOK06": {
       "name": "Purple Saree Festive",
       "occasion": "function",
-      "style": ["guest", "modern"],
+      "style": [
+        "guest",
+        "modern"
+      ],
       "hero": "https://images.unsplash.com/photo-1758985402638-6028bae83b98?auto=format&fit=crop&w=1600&q=80",
       "source": "https://unsplash.com/photos/young-woman-in-traditional-purple-sari-and-jewelry-JY43gu7w_Rs",
       "licence": "Unsplash License",
@@ -472,7 +570,10 @@
     "LOOK07": {
       "name": "Red and Gold Outfit",
       "occasion": "reception",
-      "style": ["bridal", "reception"],
+      "style": [
+        "bridal",
+        "reception"
+      ],
       "hero": "https://images.unsplash.com/photo-1645856048246-2ea2557cc3e1?auto=format&fit=crop&w=1600&q=80",
       "source": "https://unsplash.com/photos/a-woman-in-a-red-and-gold-outfit-S7XAddWKSiA",
       "licence": "Unsplash License",
@@ -483,7 +584,10 @@
     "LOOK08": {
       "name": "Elaborate Jewellery Portrait",
       "occasion": "wedding",
-      "style": ["bridal", "heavy-set"],
+      "style": [
+        "bridal",
+        "heavy-set"
+      ],
       "hero": "https://images.unsplash.com/photo-1760461805697-7aff3e93c5d9?auto=format&fit=crop&w=1600&q=80",
       "source": "https://unsplash.com/photos/a-woman-in-traditional-indian-attire-with-elaborate-jewelry-4y41nE4IKvI",
       "licence": "Unsplash License",
@@ -494,7 +598,11 @@
     "LOOK09": {
       "name": "Chennai Gold Necklace Bride",
       "occasion": "wedding",
-      "style": ["temple", "bridal", "chennai"],
+      "style": [
+        "temple",
+        "bridal",
+        "chennai"
+      ],
       "hero": "https://images.pexels.com/photos/12006824/pexels-photo-12006824.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "source": "https://www.pexels.com/photo/a-beautiful-bride-wearing-gold-necklaces-12006824/",
       "licence": "Pexels License",
@@ -505,7 +613,11 @@
     "LOOK10": {
       "name": "Gold Saree Studio Bride",
       "occasion": "wedding",
-      "style": ["silk", "kanchipuram-adjacent", "bridal"],
+      "style": [
+        "silk",
+        "kanchipuram-adjacent",
+        "bridal"
+      ],
       "hero": "https://images.pexels.com/photos/12089493/pexels-photo-12089493.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "source": "https://www.pexels.com/photo/a-woman-in-gold-saree-dress-12089493/",
       "licence": "Pexels License",
@@ -516,7 +628,11 @@
     "LOOK11": {
       "name": "South Indian Outdoor Bride",
       "occasion": "wedding",
-      "style": ["south-indian", "temple", "silk"],
+      "style": [
+        "south-indian",
+        "temple",
+        "silk"
+      ],
       "hero": "https://images.pexels.com/photos/30458517/pexels-photo-30458517.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "source": "https://www.pexels.com/photo/traditional-south-indian-bride-in-saree-outdoors-30458517/",
       "licence": "Pexels License",
@@ -527,13 +643,73 @@
     "LOOK12": {
       "name": "Pink Saree Chennai Bride",
       "occasion": "engagement",
-      "style": ["bridal", "chennai"],
+      "style": [
+        "bridal",
+        "chennai"
+      ],
       "hero": "https://images.pexels.com/photos/30458546/pexels-photo-30458546.jpeg?auto=compress&cs=tinysrgb&w=1600",
       "source": "https://www.pexels.com/photo/beautiful-bride-in-pink-saree-with-bouquet-in-chennai-30458546/",
       "licence": "Pexels License",
       "photographer": "Dream_maKkerzz",
       "aspectRatio": "portrait",
       "cropNotes": "Soft reception / engagement look"
+    }
+  },
+  "shops": {
+    "SHOP01": {
+      "name": "Varnika Jewellery Studio",
+      "locality": "T. Nagar, Chennai",
+      "hero": "https://images.unsplash.com/photo-1758995116106-113264be5365?auto=format&fit=crop&w=1600&q=80",
+      "source": "https://unsplash.com/photos/display-of-elaborate-gold-necklaces-on-black-stands-YgaCqcxE5og",
+      "licence": "Unsplash License",
+      "photographer": "Zayed Ahmed Zadu",
+      "subject": "Gold necklaces on black stands / glass cases",
+      "aspectRatio": "landscape",
+      "cropNotes": "Crop out any readable brand labels"
+    },
+    "SHOP02": {
+      "name": "Aarna Bridal Jewels",
+      "locality": "Chennai",
+      "hero": "https://images.pexels.com/photos/29043373/pexels-photo-29043373.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "source": "https://www.pexels.com/photo/elegant-gold-jewelry-display-in-store-29043373/",
+      "licence": "Pexels License",
+      "photographer": "Vedat Kandemir",
+      "subject": "Gold jewellery on black stands in store",
+      "aspectRatio": "portrait",
+      "cropNotes": "Warm showroom mood"
+    },
+    "SHOP03": {
+      "name": "Meera Heritage Jewellery",
+      "locality": "Chennai",
+      "hero": "https://images.pexels.com/photos/39797490/pexels-photo-39797490.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "source": "https://www.pexels.com/photo/traditional-indian-jewelry-and-accessories-display-39797490/",
+      "licence": "Pexels License",
+      "photographer": "Uday Ahir",
+      "subject": "Traditional Indian jewellery assortment",
+      "aspectRatio": "2:3",
+      "cropNotes": "Tray/counter display"
+    },
+    "SHOP04": {
+      "name": "Kalyani Luxe Studio",
+      "locality": "Chennai",
+      "hero": "https://images.pexels.com/photos/38556016/pexels-photo-38556016.jpeg?auto=compress&cs=tinysrgb&w=1600",
+      "source": "https://www.pexels.com/photo/vibrant-display-of-traditional-indian-bangles-38556016/",
+      "licence": "Pexels License",
+      "photographer": "Aditya Oberai",
+      "subject": "Colourful bangles shop display",
+      "aspectRatio": "3:2",
+      "cropNotes": "Colourful counter / storefront energy"
+    },
+    "SHOP05": {
+      "name": "Thulasi Fashion Jewels",
+      "locality": "Chennai",
+      "hero": "https://images.unsplash.com/photo-1710753495822-3f1a0b7cfb8d?auto=format&fit=crop&w=1600&q=80",
+      "source": "https://unsplash.com/photos/a-red-velvet-box-filled-with-lots-of-gold-jewelry-Uh9psm5qphw",
+      "licence": "Unsplash License",
+      "photographer": "Zemos",
+      "subject": "Red velvet box of gold jewellery",
+      "aspectRatio": "square",
+      "cropNotes": "Boutique counter / packing vibe"
     }
   },
   "editorial": [
@@ -623,7 +799,7 @@
       "photographer": "Hush Naidoo Jade Photography",
       "subject": "Gold and red floral textile",
       "aspectRatio": "abstract",
-      "cropNotes": "Atmosphere / collection cover — not a product"
+      "cropNotes": "Atmosphere / collection cover \u2014 not a product"
     },
     {
       "id": "ED09",
@@ -647,82 +823,5 @@
       "aspectRatio": "portrait",
       "cropNotes": "Guest-styling editorial (shared with LOOK06)"
     }
-  ],
-  "shops": {
-    "SHOP01": {
-      "name": "Varnika Jewellery Studio",
-      "locality": "T. Nagar, Chennai",
-      "hero": "https://images.unsplash.com/photo-1758995116106-113264be5365?auto=format&fit=crop&w=1600&q=80",
-      "source": "https://unsplash.com/photos/display-of-elaborate-gold-necklaces-on-black-stands-YgaCqcxE5og",
-      "licence": "Unsplash License",
-      "photographer": "Zayed Ahmed Zadu",
-      "subject": "Gold necklaces on black stands / glass cases",
-      "aspectRatio": "landscape",
-      "cropNotes": "Crop out any readable brand labels"
-    },
-    "SHOP02": {
-      "name": "Aarna Bridal Jewels",
-      "locality": "Chennai",
-      "hero": "https://images.pexels.com/photos/29043373/pexels-photo-29043373.jpeg?auto=compress&cs=tinysrgb&w=1600",
-      "source": "https://www.pexels.com/photo/elegant-gold-jewelry-display-in-store-29043373/",
-      "licence": "Pexels License",
-      "photographer": "Vedat Kandemir",
-      "subject": "Gold jewellery on black stands in store",
-      "aspectRatio": "portrait",
-      "cropNotes": "Warm showroom mood"
-    },
-    "SHOP03": {
-      "name": "Meera Heritage Jewellery",
-      "locality": "Chennai",
-      "hero": "https://images.pexels.com/photos/39797490/pexels-photo-39797490.jpeg?auto=compress&cs=tinysrgb&w=1600",
-      "source": "https://www.pexels.com/photo/traditional-indian-jewelry-and-accessories-display-39797490/",
-      "licence": "Pexels License",
-      "photographer": "Uday Ahir",
-      "subject": "Traditional Indian jewellery assortment",
-      "aspectRatio": "2:3",
-      "cropNotes": "Tray/counter display"
-    },
-    "SHOP04": {
-      "name": "Kalyani Luxe Studio",
-      "locality": "Chennai",
-      "hero": "https://images.pexels.com/photos/38556016/pexels-photo-38556016.jpeg?auto=compress&cs=tinysrgb&w=1600",
-      "source": "https://www.pexels.com/photo/vibrant-display-of-traditional-indian-bangles-38556016/",
-      "licence": "Pexels License",
-      "photographer": "Aditya Oberai",
-      "subject": "Colourful bangles shop display",
-      "aspectRatio": "3:2",
-      "cropNotes": "Colourful counter / storefront energy"
-    },
-    "SHOP05": {
-      "name": "Thulasi Fashion Jewels",
-      "locality": "Chennai",
-      "hero": "https://images.unsplash.com/photo-1710753495822-3f1a0b7cfb8d?auto=format&fit=crop&w=1600&q=80",
-      "source": "https://unsplash.com/photos/a-red-velvet-box-filled-with-lots-of-gold-jewelry-Uh9psm5qphw",
-      "licence": "Unsplash License",
-      "photographer": "Zemos",
-      "subject": "Red velvet box of gold jewellery",
-      "aspectRatio": "square",
-      "cropNotes": "Boutique counter / packing vibe"
-    }
-  },
-  "counts": {
-    "products": 30,
-    "looks": 12,
-    "editorial": 10,
-    "shops": 5
-  },
-  "coherence": {
-    "palette": "Warm gold metal, deep red/velvet product grounds, silk bridal colourways",
-    "productSeries": "Prefer Zayed Ahmed Unsplash velvet series + Pexels red-ground bridal displays + Wikimedia product stills",
-    "localSignal": "Multiple Chennai-tagged Pexels bridal/saree assets for LOOK09–LOOK12 and ED04",
-    "exclusions": [
-      "Unsplash+ / premium-locked",
-      "Ecommerce scrapes",
-      "Visible luxury brand logos",
-      "Watermarks",
-      "Low-resolution stamp scans",
-      "Novelty/non-jewellery subjects"
-    ],
-    "status": "prototype-ready; download locally before production hotlink reliance"
-  }
-}
+  ]
+};

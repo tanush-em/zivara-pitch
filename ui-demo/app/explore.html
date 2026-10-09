@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Explore — Zivara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/zivara.css">
+</head>
+<body>
+<main class="container" style="padding-top:20px;padding-bottom:48px">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Discover</div>
+      <h1 class="h1">Explore</h1>
+      <p class="lead">Products, looks, shops and editorial — one visual feed.</p>
+    </div>
+  </div>
+
+  <div class="page-toolbar">
+    <a class="btn btn-soft btn-sm" href="search.html">Search</a>
+    <button class="btn btn-ghost btn-sm filter-toggle" id="filterToggle" type="button">Filters</button>
+    <div class="chips" id="quickChips"></div>
+  </div>
+
+  <div class="explore-layout">
+    <aside class="filter-panel" id="filters">
+      <div class="filter-group">
+        <h4>Occasion</h4>
+        <div class="chips" style="flex-wrap:wrap" id="fOccasion"></div>
+      </div>
+      <div class="filter-group">
+        <h4>Type</h4>
+        <div class="chips" style="flex-wrap:wrap" id="fType"></div>
+      </div>
+      <div class="filter-group">
+        <h4>Style</h4>
+        <div class="chips" style="flex-wrap:wrap" id="fStyle"></div>
+      </div>
+      <div class="filter-group">
+        <h4>Rent / Buy</h4>
+        <div class="chips" id="fIntent">
+          <button type="button" class="chip" data-intent="rent">Rent</button>
+          <button type="button" class="chip" data-intent="buy">Buy</button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <h4>Max rental</h4>
+        <input type="range" id="fPrice" min="500" max="6000" step="100" value="6000" style="width:100%">
+        <div class="muted" id="fPriceLabel" style="font-size:13px;margin-top:6px">Up to ₹6,000</div>
+      </div>
+      <button class="btn btn-primary btn-sm btn-block mt-2" id="applyFilters" type="button">Apply</button>
+      <button class="btn btn-ghost btn-sm btn-block mt-1" id="clearFilters" type="button">Clear</button>
+    </aside>
+
+    <div>
+      <div class="masonry dense" id="feed"></div>
+      <div class="empty hidden" id="empty">
+        <div class="h3">Nothing matches</div>
+        <p>Try clearing filters or browsing looks instead.</p>
+        <a class="btn btn-primary mt-2" href="looks.html">Browse looks</a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div class="sheet-backdrop" id="sheetBg"></div>
+<div class="sheet" id="sheet">
+  <div class="sheet-handle"></div>
+  <div id="sheetBody"></div>
+</div>
+
+<script src="assets/js/images.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderConsumerNav, mountDemoBanner, productCard, lookCard, editorialCard, shopCard, filterProducts, formatINR, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderConsumerNav("explore");
+
+  const state = { occasion: null, category: null, style: null, intent: null, maxRent: 6000 };
+
+  function chipGroup(el, items, key) {
+    el.innerHTML = items.map(v => `<button type="button" class="chip" data-key="${key}" data-val="${v}">${v}</button>`).join("");
+    el.addEventListener("click", (e) => {
+      const b = e.target.closest(".chip");
+      if (!b) return;
+      const val = b.dataset.val;
+      state[key] = state[key] === val ? null : val;
+      [...el.children].forEach(c => c.classList.toggle("active", c.dataset.val === state[key]));
+    });
+  }
+
+  chipGroup($("#fOccasion"), ["wedding","reception","engagement","festival","function","wedding-guest"], "occasion");
+  chipGroup($("#fType"), ["necklace","earrings","bangles","choker","maang-tikka","complete-set"], "category");
+  chipGroup($("#fStyle"), ["temple","kundan","polki","bridal","traditional","fashion","modern"], "style");
+
+  $("#fIntent").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-intent]");
+    if (!b) return;
+    state.intent = state.intent === b.dataset.intent ? null : b.dataset.intent;
+    [...$("#fIntent").children].forEach(c => c.classList.toggle("active", c.dataset.intent === state.intent));
+  });
+
+  $("#fPrice").addEventListener("input", () => {
+    state.maxRent = Number($("#fPrice").value);
+    $("#fPriceLabel").textContent = `Up to ${formatINR(state.maxRent)}`;
+  });
+
+  $("#quickChips").innerHTML = ["Temple","Kundan","Under ₹2000","Looks","Shops"].map(l =>
+    `<button type="button" class="chip chip-soft" data-quick="${l}">${l}</button>`).join("");
+  $("#quickChips").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-quick]");
+    if (!b) return;
+    const q = b.dataset.quick;
+    if (q === "Temple") state.style = "temple";
+    if (q === "Kundan") state.style = "kundan";
+    if (q === "Under ₹2000") { state.maxRent = 2000; $("#fPrice").value = 2000; $("#fPriceLabel").textContent = "Up to ₹2,000"; }
+    if (q === "Looks") { location.href = "looks.html"; return; }
+    if (q === "Shops") { location.href = "shops.html"; return; }
+    render();
+  });
+
+  function render() {
+    const products = filterProducts({
+      occasion: state.occasion,
+      category: state.category,
+      style: state.style,
+      maxRent: state.maxRent < 6000 ? state.maxRent : null,
+      rentBuy: state.intent,
+    });
+    const looks = D.looks.filter(l => {
+      if (state.occasion && !(l.occasion.includes(state.occasion) || state.occasion.includes(l.occasion))) return false;
+      if (state.style && !l.style.some(s => s.includes(state.style))) return false;
+      if (state.maxRent < 6000 && l.rentalPrice > state.maxRent) return false;
+      return true;
+    }).slice(0, 4);
+    const shops = (!state.category && !state.maxRent) ? D.shops.slice(0, 2) : [];
+    const eds = D.editorial.slice(0, 3);
+
+    const items = [];
+    products.forEach((p, i) => {
+      items.push(productCard(p, { tall: i % 5 === 0 }));
+      if (i === 2 && looks[0]) items.push(lookCard(looks[0]));
+      if (i === 5 && eds[0]) items.push(editorialCard(eds[0]));
+      if (i === 8 && shops[0]) items.push(`<article class="masonry-item">${shopCard(shops[0])}</article>`);
+      if (i === 11 && looks[1]) items.push(lookCard(looks[1]));
+    });
+    if (!products.length) {
+      looks.forEach(l => items.push(lookCard(l)));
+    }
+    // AI recommendation card
+    items.splice(4, 0, `
+      <article class="masonry-item">
+        <a class="media-card" href="ai-stylist.html" style="background:var(--zivara-dark);color:#fff;padding:28px 18px;min-height:220px;display:flex;flex-direction:column;justify-content:flex-end">
+          <div class="eyebrow" style="color:rgba(255,252,247,.6)">AI pick</div>
+          <div class="h3" style="color:#fff;margin:8px 0">Not sure where to start?</div>
+          <p style="font-size:13px;color:rgba(255,252,247,.75)">Get 3 looks matched to your saree & budget.</p>
+        </a>
+      </article>`);
+
+    $("#feed").innerHTML = items.join("");
+    $("#empty").classList.toggle("hidden", items.length > 1);
+    Zivara.syncWishButtons();
+  }
+
+  $("#applyFilters").addEventListener("click", () => {
+    closeSheet();
+    render();
+  });
+  $("#clearFilters").addEventListener("click", () => {
+    Object.assign(state, { occasion: null, category: null, style: null, intent: null, maxRent: 6000 });
+    $("#fPrice").value = 6000;
+    $("#fPriceLabel").textContent = "Up to ₹6,000";
+    document.querySelectorAll(".filter-panel .chip.active").forEach(c => c.classList.remove("active"));
+    render();
+  });
+
+  function openSheet() {
+    $("#sheetBody").innerHTML = "";
+    $("#sheetBody").appendChild($("#filters"));
+    $("#filters").classList.add("open");
+    $("#sheet").classList.add("open");
+    $("#sheetBg").classList.add("open");
+  }
+  function closeSheet() {
+    $("#sheet").classList.remove("open");
+    $("#sheetBg").classList.remove("open");
+    $(".explore-layout").insertBefore($("#filters"), $(".explore-layout").firstChild);
+  }
+  $("#filterToggle").addEventListener("click", openSheet);
+  $("#sheetBg").addEventListener("click", closeSheet);
+
+  render();
+});
+</script>
+</body>
+</html>

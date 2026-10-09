@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wishlist — Zivara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/zivara.css">
+</head>
+<body>
+<main class="container" style="padding:28px 0 48px">
+  <div class="eyebrow">Saved</div>
+  <h1 class="h1 mb-2">Wishlist</h1>
+  <div class="tabs" id="tabs">
+    <button type="button" class="tab active" data-tab="products">Jewellery</button>
+    <button type="button" class="tab" data-tab="looks">Looks</button>
+    <button type="button" class="tab" data-tab="shops">Shops</button>
+  </div>
+  <div id="content"></div>
+</main>
+<script src="assets/js/images.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderConsumerNav, mountDemoBanner, getWishlist, productCard, lookCard, shopCard, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderConsumerNav("wishlist");
+  let tab = "products";
+
+  function render() {
+    const w = getWishlist();
+    let html = "";
+    if (tab === "products") {
+      const items = w.products.map(id => D.getProduct(id)).filter(Boolean);
+      html = items.length ? `<div class="masonry">${items.map(p => productCard(p)).join("")}</div>`
+        : `<div class="empty"><div class="h3">No jewellery saved</div><p>Heart pieces while exploring.</p><a class="btn btn-primary mt-2" href="explore.html">Explore</a></div>`;
+    } else if (tab === "looks") {
+      const items = w.looks.map(id => D.getLook(id)).filter(Boolean);
+      html = items.length ? `<div class="masonry">${items.map(l => lookCard(l)).join("")}</div>`
+        : `<div class="empty"><div class="h3">No looks saved</div><a class="btn btn-primary mt-2" href="looks.html">Browse looks</a></div>`;
+    } else {
+      const items = w.shops.map(id => D.getShop(id)).filter(Boolean);
+      html = items.length ? `<div class="grid-shops">${items.map(s => shopCard(s)).join("")}</div>`
+        : `<div class="empty"><div class="h3">No shops saved</div><a class="btn btn-primary mt-2" href="shops.html">Find shops</a></div>`;
+    }
+    $("#content").innerHTML = html;
+    Zivara.syncWishButtons();
+  }
+
+  $("#tabs").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-tab]");
+    if (!b) return;
+    tab = b.dataset.tab;
+    [...$("#tabs").children].forEach(c => c.classList.toggle("active", c === b));
+    render();
+  });
+  document.addEventListener("click", (e) => {
+    if (e.target.closest("[data-wish]")) setTimeout(render, 50);
+  });
+  render();
+});
+</script>
+</body>
+</html>

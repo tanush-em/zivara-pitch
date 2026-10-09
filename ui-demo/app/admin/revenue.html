@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revenue — Zivara Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/zivara.css">
+</head>
+<body>
+<div class="dash-top"><div><div class="eyebrow">Economics</div><h1 class="h1">Revenue</h1></div></div>
+<div class="kpi-grid" id="kpis"></div>
+<div class="panel"><h3>Shop earnings</h3><div class="table-wrap"><table class="data" id="table"></table></div></div>
+<script src="../assets/js/images.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderDashNav, mountDemoBanner, formatINR, getRetailerBookings, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderDashNav("admin", "revenue");
+  const bookings = getRetailerBookings();
+  const gmv = bookings.reduce((s,b)=>s+b.rentalTotal,0);
+  const rate = 0.12;
+  const commission = Math.round(gmv * rate);
+  const shopEarnings = gmv - commission;
+
+  $("#kpis").innerHTML = [
+    ["GMV", formatINR(gmv)],
+    ["Commission (12%)", formatINR(commission)],
+    ["Shop earnings", formatINR(shopEarnings)],
+    ["Avg booking", formatINR(bookings.length ? Math.round(gmv/bookings.length) : 0)],
+  ].map(([l,v]) => `<div class="kpi"><div class="label">${l}</div><div class="value">${v}</div></div>`).join("");
+
+  $("#table").innerHTML = `
+    <thead><tr><th>Shop</th><th>Bookings</th><th>GMV</th><th>Commission</th><th>Shop net</th></tr></thead>
+    <tbody>${D.shops.map(s => {
+      const bks = bookings.filter(b => b.shopId === s.id);
+      const sgmv = bks.reduce((a,b)=>a+b.rentalTotal,0);
+      const comm = Math.round(sgmv * rate);
+      return `<tr>
+        <td><strong>${s.name}</strong><div class="muted" style="font-size:11px">${s.locality}</div></td>
+        <td>${bks.length}</td>
+        <td>${formatINR(sgmv)}</td>
+        <td>${formatINR(comm)}</td>
+        <td>${formatINR(sgmv - comm)}</td>
+      </tr>`;
+    }).join("")}</tbody>`;
+});
+</script>
+</body>
+</html>

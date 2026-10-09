@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bookings — Zivara Retailer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/zivara.css">
+</head>
+<body>
+<div class="dash-top">
+  <div><div class="eyebrow">Operations</div><h1 class="h1">Bookings</h1></div>
+</div>
+<p class="muted mb-2" style="font-size:13px">Workflow: New → Confirmed → Picked Up → Rented → Returned → Completed. Advance status with the button.</p>
+<div class="chips mb-2" id="filters"></div>
+<div class="panel"><div class="table-wrap"><table class="data" id="table"></table></div></div>
+<script src="../assets/js/images.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderDashNav, mountDemoBanner, formatINR, getRetailerBookings, updateRetailerBooking, toast, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderDashNav("retailer", "bookings");
+  const flow = ["new","confirmed","picked-up","rented","returned","completed"];
+  let filter = "all";
+
+  $("#filters").innerHTML = ["all", ...flow].map(s =>
+    `<button type="button" class="chip ${s==="all"?"active":""}" data-s="${s}">${s}</button>`).join("");
+
+  function nextStatus(s) {
+    const i = flow.indexOf(s);
+    return i < 0 || i >= flow.length - 1 ? null : flow[i + 1];
+  }
+
+  function render() {
+    let list = getRetailerBookings().filter(b => b.shopId === D.retailerShopId);
+    if (filter !== "all") list = list.filter(b => b.status === filter);
+    $("#table").innerHTML = `
+      <thead><tr><th>ID</th><th>Customer</th><th>Product</th><th>Dates</th><th>Total</th><th>Status</th><th>Action</th></tr></thead>
+      <tbody>${list.map(b => {
+        const p = D.getProduct(b.productIds[0]);
+        const c = D.getCustomer(b.customerId);
+        const next = nextStatus(b.status);
+        return `<tr>
+          <td>${b.id}</td>
+          <td>${b.customerName || c?.name || "—"}</td>
+          <td>${p?.name || (b.lookId || "—")}</td>
+          <td>${b.startDate} → ${b.endDate}</td>
+          <td>${formatINR(b.rentalTotal)}</td>
+          <td><span class="status ${b.status}">${b.status}</span></td>
+          <td>${next ? `<button class="btn btn-soft btn-sm" data-advance="${b.id}" data-next="${next}">→ ${next}</button>` : "—"}</td>
+        </tr>`;
+      }).join("") || `<tr><td colspan="7" class="muted">No bookings</td></tr>`}</tbody>`;
+  }
+
+  $("#filters").onclick = (e) => {
+    const b = e.target.closest("[data-s]");
+    if (!b) return;
+    filter = b.dataset.s;
+    [...$("#filters").children].forEach(c => c.classList.toggle("active", c === b));
+    render();
+  };
+  document.body.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-advance]");
+    if (!b) return;
+    updateRetailerBooking(b.dataset.advance, { status: b.dataset.next });
+    toast(`Moved to ${b.dataset.next}`);
+    render();
+  });
+  render();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Customers — Zivara Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/zivara.css">
+</head>
+<body>
+<div class="dash-top"><div><div class="eyebrow">Demand</div><h1 class="h1">Customers</h1></div></div>
+<div class="panel"><div class="table-wrap"><table class="data" id="table"></table></div></div>
+<script src="../assets/js/images.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderDashNav, mountDemoBanner, getRetailerBookings, getUserBookings, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderDashNav("admin", "customers");
+  const bookings = [...getRetailerBookings(), ...getUserBookings()];
+  $("#table").innerHTML = `
+    <thead><tr><th>Name</th><th>Locality</th><th>Email</th><th>Phone</th><th>Bookings</th><th>Prefs</th></tr></thead>
+    <tbody>${D.customers.map(c => {
+      const bcount = bookings.filter(b => b.customerId === c.id).length;
+      return `<tr>
+        <td><strong>${c.name}</strong></td>
+        <td>${c.locality}</td>
+        <td>${c.email}</td>
+        <td>${c.phone}</td>
+        <td>${bcount}</td>
+        <td class="muted" style="font-size:12px">${c.preferences.style} · ₹${c.preferences.budget}</td>
+      </tr>`;
+    }).join("")}</tbody>`;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retailer Dashboard — Zivara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/zivara.css">
+</head>
+<body>
+<div class="demo-banner">Zivara Retailer OS · demo for Varnika Jewellery Studio · <a href="../index.html">Consumer</a> · <a href="../admin/index.html">Admin</a></div>
+<div class="dash-top">
+  <div>
+    <div class="eyebrow">Retailer OS</div>
+    <h1 class="h1" id="shopName">Dashboard</h1>
+  </div>
+  <a class="btn btn-primary btn-sm" href="product-editor.html">Add product</a>
+</div>
+<div class="kpi-grid" id="kpis"></div>
+<div class="grid-2">
+  <div class="panel">
+    <h3>Upcoming rentals</h3>
+    <div id="upcoming"></div>
+  </div>
+  <div class="panel">
+    <h3>Recent enquiries</h3>
+    <div id="enquiries"></div>
+  </div>
+</div>
+<div class="grid-2">
+  <div class="panel">
+    <h3>Top products</h3>
+    <div id="top"></div>
+  </div>
+  <div class="panel">
+    <h3>Booking timeline</h3>
+    <div id="timeline"></div>
+  </div>
+</div>
+<script src="../assets/js/images.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderDashNav, formatINR, getRetailerBookings, getRetailerEnquiries, $ } = Zivara;
+  const D = ZivaraData;
+  renderDashNav("retailer", "dash");
+  const shop = D.getShop(D.retailerShopId);
+  $("#shopName").textContent = shop.name;
+  const products = D.productsByShop(shop.id);
+  const bookings = getRetailerBookings().filter(b => b.shopId === shop.id);
+  const enquiries = getRetailerEnquiries().filter(e => e.shopId === shop.id);
+  const revenue = bookings.filter(b => ["completed","rented","returned"].includes(b.status)).reduce((s,b)=>s+b.rentalTotal,0);
+  const views = products.reduce((s,p)=>s+p.views,0);
+
+  $("#kpis").innerHTML = [
+    ["Revenue generated", formatINR(revenue), "+12% demo"],
+    ["Catalogue views", views.toLocaleString("en-IN"), "this period"],
+    ["Enquiries", enquiries.length, `${enquiries.filter(e=>e.status==="open").length} open`],
+    ["Bookings", bookings.length, `${bookings.filter(b=>b.status==="new").length} new`],
+  ].map(([l,v,d]) => `<div class="kpi"><div class="label">${l}</div><div class="value">${v}</div><div class="delta">${d}</div></div>`).join("");
+
+  $("#upcoming").innerHTML = bookings.filter(b => !["completed","returned"].includes(b.status)).slice(0,5).map(b => {
+    const p = D.getProduct(b.productIds[0]);
+    return `<div class="row-between" style="padding:10px 0;border-bottom:1px solid var(--zivara-line)">
+      <div><strong>${p?.name || "Look"}</strong><div class="muted" style="font-size:12px">${b.startDate} → ${b.endDate}</div></div>
+      <span class="status ${b.status}">${b.status}</span>
+    </div>`;
+  }).join("") || "<p class='muted'>No upcoming rentals</p>";
+
+  $("#enquiries").innerHTML = enquiries.slice(0,5).map(e => {
+    const c = D.getCustomer(e.customerId);
+    const p = D.getProduct(e.productId);
+    return `<div class="row-between" style="padding:10px 0;border-bottom:1px solid var(--zivara-line)">
+      <div><strong>${c?.name || "Customer"}</strong><div class="muted" style="font-size:12px">${p?.name || ""} · ${e.intent}</div></div>
+      <span class="status ${e.status}">${e.status}</span>
+    </div>`;
+  }).join("");
+
+  $("#top").innerHTML = [...products].sort((a,b)=>b.views-a.views).slice(0,5).map(p => `
+    <div class="row" style="padding:8px 0;border-bottom:1px solid var(--zivara-line)">
+      <img class="thumb" src="${p.images[0]}" alt="" style="width:40px;height:40px;object-fit:cover;border-radius:6px" />
+      <div style="flex:1"><strong style="font-size:13px">${p.name}</strong><div class="muted" style="font-size:12px">${p.views} views · ${p.enquiries} enquiries</div></div>
+      <span class="muted" style="font-size:12px">${formatINR(p.rentalPrice)}</span>
+    </div>`).join("");
+
+  $("#timeline").innerHTML = bookings.slice(0,6).map(b => `
+    <div class="row" style="gap:12px;padding:8px 0">
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--zivara-gold);margin-top:6px"></div>
+      <div><div style="font-size:13px"><strong>${b.id}</strong> · ${b.status}</div>
+      <div class="muted" style="font-size:12px">${new Date(b.createdAt).toLocaleDateString("en-IN")} · ${formatINR(b.rentalTotal)}</div></div>
+    </div>`).join("");
+});
+</script>
+</body>
+</html>

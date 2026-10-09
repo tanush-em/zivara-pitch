@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Saree Matcher — Zivara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/zivara.css">
+</head>
+<body>
+<main class="container" style="padding:28px 0 64px">
+  <div class="eyebrow">AI saree matcher</div>
+  <h1 class="h1">Match jewellery to your saree</h1>
+  <p class="lead mb-3">Pick a saree mood → palette → recommendations → complete look.</p>
+  <div id="stage"></div>
+</main>
+<script src="assets/js/images.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderConsumerNav, mountDemoBanner, runAIProcess, recommendLooks, productCard, formatINR, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderConsumerNav("ai");
+
+  const sarees = [
+    { id: "pink", name: "Pink Kanchipuram", img: D.looks.find(l => l.id === "LOOK12").heroImage, palette: ["#C45C7A", "#F2D5C8", "#C9A227", "#5C1A2E"], prefs: { colour: "pink", occasion: "engagement", style: "bridal", budget: 4000, heaviness: "medium" } },
+    { id: "red", name: "Red bridal silk", img: D.looks.find(l => l.id === "LOOK01").heroImage, palette: ["#8B1E2D", "#D4A017", "#F5E6C8", "#3A1518"], prefs: { colour: "red", occasion: "wedding", style: "temple", budget: 4500, heaviness: "heavy" } },
+    { id: "green", name: "Emerald guest silk", img: D.looks.find(l => l.id === "LOOK04").heroImage, palette: ["#1F6B4A", "#C9A227", "#E8F0EA", "#0F2E22"], prefs: { colour: "green", occasion: "wedding-guest", style: "modern", budget: 2500, heaviness: "light" } },
+    { id: "purple", name: "Purple festive", img: D.looks.find(l => l.id === "LOOK06").heroImage, palette: ["#5B3A7A", "#E8C96A", "#F4ECF8", "#2A1838"], prefs: { colour: "purple", occasion: "function", style: "fashion", budget: 1800, heaviness: "light" } },
+  ];
+
+  function picker() {
+    $("#stage").innerHTML = `
+      <div class="grid-4" id="grid"></div>
+      <p class="muted mt-2" style="font-size:13px">Demo images represent saree moods — not product SKUs.</p>`;
+    $("#grid").innerHTML = sarees.map(s => `
+      <button type="button" class="media-card" data-id="${s.id}">
+        <div class="media"><img src="${s.img}" alt="${s.name}" loading="lazy" /></div>
+        <div class="meta"><div class="name">${s.name}</div></div>
+      </button>`).join("");
+    $("#grid").onclick = async (e) => {
+      const b = e.target.closest("[data-id]");
+      if (!b) return;
+      const s = sarees.find(x => x.id === b.dataset.id);
+      await runAIProcess($("#stage"), [
+        "Sampling saree palette",
+        "Interpreting occasion & weight",
+        "Matching metal & stone moods",
+        "Assembling a complete look",
+      ], 750);
+      results(s);
+    };
+  }
+
+  function results(s) {
+    const recs = recommendLooks(s.prefs, 3);
+    const top = recs[0];
+    const products = D.products
+      .map(p => ({ p, score: Zivara.scoreProduct(p, s.prefs) }))
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6)
+      .map(x => x.p);
+
+    $("#stage").innerHTML = `
+      <div class="grid-2 mb-3">
+        <div>
+          <img src="${s.img}" alt="${s.name}" style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:12px" />
+        </div>
+        <div>
+          <div class="eyebrow">Palette</div>
+          <h2 class="h2 mt-1">${s.name}</h2>
+          <div class="palette">${s.palette.map(c => `<span class="swatch" style="background:${c}" title="${c}"></span>`).join("")}</div>
+          <p class="muted">Interpreted as ${s.prefs.style} · ${s.prefs.heaviness} · ${s.prefs.occasion.replace("-"," ")} · budget ~${formatINR(s.prefs.budget)}</p>
+          <button class="btn btn-ghost btn-sm mt-2" type="button" id="again">Choose another</button>
+        </div>
+      </div>
+      <div class="section-head"><div><div class="eyebrow">Recommended pieces</div><h2 class="h2">Jewellery that fits</h2></div></div>
+      <div class="masonry mb-3" id="pieces"></div>
+      <div class="section-head"><div><div class="eyebrow">Complete look</div><h2 class="h2">${top.look.name}</h2></div>
+        <a class="link-arrow" href="look.html?id=${top.look.id}">Open →</a>
+      </div>
+      <article class="reco-card" style="max-width:480px">
+        <img src="${top.look.heroImage}" alt="${top.look.name}" />
+        <div class="body">
+          <p class="reason">${top.reasons.join(" · ")}</p>
+          <div class="muted">Bundle rent ${formatINR(top.look.rentalPrice)} · Match ${Math.round(top.score*100)}%</div>
+          <a class="btn btn-primary btn-sm mt-2" href="look.html?id=${top.look.id}">Save & reserve look</a>
+        </div>
+      </article>`;
+    $("#pieces").innerHTML = products.map(p => productCard(p)).join("");
+    $("#again").onclick = picker;
+    Zivara.syncWishButtons();
+  }
+
+  picker();
+});
+</script>
+</body>
+</html>

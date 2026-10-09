@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Enquiries — Zivara Retailer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/zivara.css">
+</head>
+<body>
+<div class="dash-top">
+  <div><div class="eyebrow">Leads</div><h1 class="h1">Enquiries</h1></div>
+</div>
+<div id="list"></div>
+<script src="../assets/js/images.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderDashNav, mountDemoBanner, getRetailerEnquiries, updateRetailerEnquiry, getRetailerBookings, updateRetailerBooking, addUserBooking, nextBookingId, toast, formatINR, $ } = Zivara;
+  // addUserBooking already syncs retailer bookings
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderDashNav("retailer", "enquiries");
+
+  function render() {
+    const list = getRetailerEnquiries().filter(e => e.shopId === D.retailerShopId);
+    $("#list").innerHTML = list.map(e => {
+      const c = D.getCustomer(e.customerId);
+      const p = D.getProduct(e.productId);
+      return `<div class="panel" data-id="${e.id}">
+        <div class="row-between">
+          <div>
+            <strong>${c?.name || "Customer"}</strong>
+            <span class="status ${e.status}" style="margin-left:8px">${e.status}</span>
+          </div>
+          <span class="muted" style="font-size:12px">${new Date(e.createdAt).toLocaleString("en-IN")}</span>
+        </div>
+        <div class="muted mt-1" style="font-size:13px">${p?.name || "General"} · Intent: ${e.intent || e.type}</div>
+        <p class="mt-2">${e.message}</p>
+        <div class="row mt-2" style="flex-wrap:wrap">
+          <button class="btn btn-soft btn-sm" type="button" data-reply="${e.id}">Reply (sim)</button>
+          <button class="btn btn-ghost btn-sm" type="button" data-contact="${e.id}">Mark contacted</button>
+          <button class="btn btn-primary btn-sm" type="button" data-convert="${e.id}">Convert to booking</button>
+        </div>
+      </div>`;
+    }).join("") || `<div class="empty"><div class="h3">No enquiries</div></div>`;
+  }
+
+  document.body.addEventListener("click", (e) => {
+    if (e.target.matches("[data-reply]")) {
+      toast("Reply sent via WhatsApp (simulated)");
+      updateRetailerEnquiry(e.target.dataset.reply, { status: "contacted" });
+      render();
+    }
+    if (e.target.matches("[data-contact]")) {
+      updateRetailerEnquiry(e.target.dataset.contact, { status: "contacted" });
+      toast("Marked contacted");
+      render();
+    }
+    if (e.target.matches("[data-convert]")) {
+      const id = e.target.dataset.convert;
+      const enq = getRetailerEnquiries().find(x => x.id === id);
+      const p = D.getProduct(enq.productId);
+      const start = new Date(); start.setDate(start.getDate() + 3);
+      const end = new Date(start); end.setDate(end.getDate() + 2);
+      const booking = {
+        id: nextBookingId(),
+        customerId: enq.customerId,
+        productIds: [enq.productId],
+        lookId: enq.lookId,
+        shopId: enq.shopId,
+        startDate: start.toISOString().slice(0,10),
+        endDate: end.toISOString().slice(0,10),
+        status: "new",
+        rentalTotal: p?.rentalPrice || 0,
+        deposit: p?.deposit || 0,
+        createdAt: new Date().toISOString(),
+      };
+      addUserBooking(booking);
+      updateRetailerEnquiry(id, { status: "converted" });
+      toast(`Booking ${booking.id} created`);
+      render();
+    }
+  });
+  render();
+});
+</script>
+</body>
+</html>

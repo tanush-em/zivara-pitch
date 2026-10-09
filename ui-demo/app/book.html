@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reserve — Zivara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/zivara.css">
+</head>
+<body>
+<main class="container-narrow" style="padding:28px 0 64px" id="main">
+  <div class="empty"><div class="h3">Loading…</div></div>
+</main>
+<script src="assets/js/images.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderConsumerNav, mountDemoBanner, qs, formatINR, addUserBooking, nextBookingId, toast, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderConsumerNav("explore");
+
+  const product = D.getProduct(qs("id") || "ZV001");
+  const look = qs("look") ? D.getLook(qs("look")) : null;
+  if (!product) {
+    $("#main").innerHTML = `<div class="empty"><div class="h3">Product missing</div></div>`;
+    return;
+  }
+  const shop = D.getShop(product.shopId);
+  const blocked = new Set(product.availableDates.blockedDays);
+  let step = 0;
+  const state = {
+    start: qs("start") || "",
+    end: "",
+    name: D.currentUser.name,
+    phone: D.currentUser.phone,
+    note: "",
+    booking: null,
+  };
+
+  const steps = ["Dates", "Availability", "Details", "Review", "Confirmed"];
+
+  function addDays(iso, n) {
+    const d = new Date(iso + "T12:00:00");
+    d.setDate(d.getDate() + n);
+    return d.toISOString().slice(0, 10);
+  }
+
+  function isAvailable(iso) {
+    if (!iso) return false;
+    const day = new Date(iso + "T12:00:00").getDate();
+    return !blocked.has(day);
+  }
+
+  function render() {
+    if (step === 4 && state.booking) {
+      $("#main").innerHTML = `
+        <div class="confirm-card">
+          <div class="check">✓</div>
+          <div class="eyebrow">Reservation simulated</div>
+          <h1 class="h1 mt-1">You're booked</h1>
+          <p class="muted mt-2">Reference <strong>${state.booking.id}</strong> · ${shop.name} will confirm pickup.</p>
+          <div class="panel mt-3 text-left">
+            <div class="row-between"><span class="muted">Piece</span><strong>${look ? look.name : product.name}</strong></div>
+            <div class="row-between mt-1"><span class="muted">Dates</span><strong>${state.start} → ${state.end}</strong></div>
+            <div class="row-between mt-1"><span class="muted">Rental</span><strong>${formatINR(state.booking.rentalTotal)}</strong></div>
+            <div class="row-between mt-1"><span class="muted">Deposit</span><strong>${formatINR(state.booking.deposit)}</strong></div>
+          </div>
+          <div class="row" style="justify-content:center;margin-top:22px;flex-wrap:wrap">
+            <button class="btn btn-primary" type="button" id="contactShop">Contact shop</button>
+            <a class="btn btn-ghost" href="profile.html">View in profile</a>
+            <a class="btn btn-soft" href="explore.html">Keep browsing</a>
+          </div>
+        </div>`;
+      $("#contactShop").onclick = () => toast(`WhatsApp ${shop.whatsapp}… (simulated)`);
+      return;
+    }
+
+    $("#main").innerHTML = `
+      <div class="eyebrow">Rental reservation</div>
+      <h1 class="h1">${look ? "Rent look" : "Reserve"} · ${look ? look.name : product.name}</h1>
+      <div class="steps">${steps.map((s,i) => `<span class="step-pill ${i===step?"active":""} ${i<step?"done":""}">${i+1}. ${s}</span>`).join("")}</div>
+      <div class="grid-2">
+        <div class="panel">
+          <img src="${look ? look.heroImage : product.images[0]}" alt="" style="width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:8px" />
+          <div class="mt-2"><strong>${look ? look.name : product.name}</strong></div>
+          <div class="muted">${shop.name} · ${shop.locality}</div>
+          <div class="mt-2">Rental <strong>${formatINR(look ? look.rentalPrice : product.rentalPrice)}</strong> · Deposit <strong>${formatINR(product.deposit)}</strong></div>
+        </div>
+        <div class="panel" id="stepBody"></div>
+      </div>`;
+
+    const body = $("#stepBody");
+    if (step === 0) {
+      body.innerHTML = `
+        <h3>Select dates</h3>
+        <div class="form-grid two mt-2">
+          <div class="form-row"><label>Start</label><input type="date" id="start" value="${state.start}" /></div>
+          <div class="form-row"><label>End</label><input type="date" id="end" value="${state.end}" /></div>
+        </div>
+        <p class="muted" style="font-size:13px">Typical rental window is 2–3 days including the event.</p>
+        <button class="btn btn-primary mt-2" type="button" id="next">Check availability</button>`;
+      $("#start").onchange = () => {
+        state.start = $("#start").value;
+        if (!state.end && state.start) {
+          state.end = addDays(state.start, 2);
+          $("#end").value = state.end;
+        }
+      };
+      $("#end").onchange = () => { state.end = $("#end").value; };
+      $("#next").onclick = () => {
+        state.start = $("#start").value;
+        state.end = $("#end").value;
+        if (!state.start || !state.end) return toast("Pick both dates");
+        if (state.end < state.start) return toast("End must be after start");
+        step = 1; render();
+      };
+    } else if (step === 1) {
+      const ok = isAvailable(state.start);
+      body.innerHTML = `
+        <h3>Availability</h3>
+        <p class="mt-2">${ok
+          ? `<span style="color:var(--zivara-success)">Available</span> for ${state.start} → ${state.end} at ${shop.name}.`
+          : `<span style="color:var(--zivara-danger)">Conflict</span> on the selected start day in this demo calendar.`}</p>
+        <p class="muted mt-1" style="font-size:13px">${product.availableDates.note}</p>
+        <div class="row mt-3">
+          <button class="btn btn-ghost" type="button" id="back">Back</button>
+          <button class="btn btn-primary" type="button" id="next" ${ok ? "" : "disabled"} style="${ok?"":"opacity:.4"}">Continue</button>
+        </div>`;
+      $("#back").onclick = () => { step = 0; render(); };
+      $("#next").onclick = () => { step = 2; render(); };
+    } else if (step === 2) {
+      body.innerHTML = `
+        <h3>Your details</h3>
+        <div class="form-row mt-2"><label>Name</label><input id="name" value="${state.name}" /></div>
+        <div class="form-row"><label>Phone</label><input id="phone" value="${state.phone}" /></div>
+        <div class="form-row"><label>Note for shop</label><textarea id="note" rows="3" placeholder="Event time, pickup preference…">${state.note}</textarea></div>
+        <div class="row mt-2">
+          <button class="btn btn-ghost" type="button" id="back">Back</button>
+          <button class="btn btn-primary" type="button" id="next">Review</button>
+        </div>`;
+      $("#back").onclick = () => { step = 1; render(); };
+      $("#next").onclick = () => {
+        state.name = $("#name").value.trim();
+        state.phone = $("#phone").value.trim();
+        state.note = $("#note").value.trim();
+        if (!state.name || !state.phone) return toast("Name and phone required");
+        step = 3; render();
+      };
+    } else if (step === 3) {
+      const total = look ? look.rentalPrice : product.rentalPrice;
+      body.innerHTML = `
+        <h3>Review</h3>
+        <div class="stack mt-2">
+          <div class="row-between"><span class="muted">Customer</span><strong>${state.name}</strong></div>
+          <div class="row-between"><span class="muted">Phone</span><strong>${state.phone}</strong></div>
+          <div class="row-between"><span class="muted">Dates</span><strong>${state.start} → ${state.end}</strong></div>
+          <div class="row-between"><span class="muted">Rental</span><strong>${formatINR(total)}</strong></div>
+          <div class="row-between"><span class="muted">Deposit (at pickup)</span><strong>${formatINR(product.deposit)}</strong></div>
+          ${state.note ? `<div><span class="muted">Note</span><div>${state.note}</div></div>` : ""}
+        </div>
+        <p class="muted mt-2" style="font-size:12px">No real payment will be collected. This creates a simulated reservation for the demo.</p>
+        <div class="row mt-2">
+          <button class="btn btn-ghost" type="button" id="back">Back</button>
+          <button class="btn btn-gold" type="button" id="confirm">Confirm reservation</button>
+        </div>`;
+      $("#back").onclick = () => { step = 2; render(); };
+      $("#confirm").onclick = () => {
+        state.booking = {
+          id: nextBookingId(),
+          customerId: D.currentUser.id,
+          productIds: look ? look.productIds : [product.id],
+          lookId: look ? look.id : null,
+          shopId: shop.id,
+          startDate: state.start,
+          endDate: state.end,
+          status: "new",
+          rentalTotal: look ? look.rentalPrice : product.rentalPrice,
+          deposit: product.deposit,
+          createdAt: new Date().toISOString(),
+          customerName: state.name,
+          note: state.note,
+        };
+        addUserBooking(state.booking);
+        toast("Reservation created");
+        step = 4; render();
+      };
+    }
+  }
+
+  render();
+});
+</script>
+</body>
+</html>

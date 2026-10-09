@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shops — Zivara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/zivara.css">
+</head>
+<body>
+<main class="container" style="padding:28px 0 48px">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Chennai</div>
+      <h1 class="h1">Local shops</h1>
+      <p class="lead">Discover partner stores with rental and purchase inventory.</p>
+    </div>
+  </div>
+  <div class="chips mb-3" id="filters"></div>
+  <div class="grid-shops" id="grid"></div>
+</main>
+<script src="assets/js/images.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderConsumerNav, mountDemoBanner, shopCard, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderConsumerNav("shops");
+  let cat = "all";
+  const cats = ["all", ...new Set(D.shops.flatMap(s => s.categories))];
+  $("#filters").innerHTML = cats.map(c =>
+    `<button type="button" class="chip ${c==="all"?"active":""}" data-c="${c}">${c}</button>`
+  ).join("");
+  function render() {
+    const list = D.shops.filter(s => cat === "all" || s.categories.includes(cat));
+    $("#grid").innerHTML = list.map(s => `
+      <div>
+        ${shopCard(s)}
+        <div class="row-between mt-1">
+          <span class="tag-list">${s.categories.slice(0,3).map(c=>`<span class="tag">${c}</span>`).join("")}</span>
+          <button class="icon-btn" data-wish="shop" data-id="${s.id}" aria-label="Save shop" style="width:36px;height:36px">${Zivara.heartSVG(Zivara.isWished("shop", s.id))}</button>
+        </div>
+      </div>`).join("");
+    Zivara.syncWishButtons();
+  }
+  $("#filters").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-c]");
+    if (!b) return;
+    cat = b.dataset.c;
+    [...$("#filters").children].forEach(c => c.classList.toggle("active", c === b));
+    render();
+  });
+  render();
+});
+</script>
+</body>
+</html>

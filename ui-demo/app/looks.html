@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Looks — Zivara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/zivara.css">
+</head>
+<body>
+<main class="container" style="padding:28px 0 48px">
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Complete looks</div>
+      <h1 class="h1">Styled combinations</h1>
+      <p class="lead">Editorial looks with pieces, bundle rental price and savings.</p>
+    </div>
+  </div>
+  <div class="chips mb-3" id="filters"></div>
+  <div class="masonry" id="grid"></div>
+</main>
+<script src="assets/js/images.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderConsumerNav, mountDemoBanner, lookCard, formatINR, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderConsumerNav("looks");
+  let occasion = null;
+  const occasions = ["all", ...new Set(D.looks.map(l => l.occasion))];
+  $("#filters").innerHTML = occasions.map(o =>
+    `<button type="button" class="chip ${o==="all"?"active":""}" data-o="${o}">${o === "all" ? "All" : o.replace("-"," ")}</button>`
+  ).join("");
+  function render() {
+    const list = D.looks.filter(l => !occasion || occasion === "all" || l.occasion === occasion);
+    $("#grid").innerHTML = list.map(lookCard).join("");
+    Zivara.syncWishButtons();
+  }
+  $("#filters").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-o]");
+    if (!b) return;
+    occasion = b.dataset.o;
+    [...$("#filters").children].forEach(c => c.classList.toggle("active", c === b));
+    render();
+  });
+  render();
+});
+</script>
+</body>
+</html>

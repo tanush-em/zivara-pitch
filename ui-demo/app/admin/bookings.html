@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bookings — Zivara Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/zivara.css">
+</head>
+<body>
+<div class="dash-top"><div><div class="eyebrow">Global</div><h1 class="h1">Bookings</h1></div></div>
+<div class="panel"><div class="table-wrap"><table class="data" id="table"></table></div></div>
+<script src="../assets/js/images.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderDashNav, mountDemoBanner, formatINR, getRetailerBookings, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderDashNav("admin", "bookings");
+  const list = getRetailerBookings();
+  $("#table").innerHTML = `
+    <thead><tr><th>ID</th><th>Shop</th><th>Customer</th><th>Product</th><th>Dates</th><th>Total</th><th>Status</th></tr></thead>
+    <tbody>${list.map(b => {
+      const shop = D.getShop(b.shopId);
+      const c = D.getCustomer(b.customerId);
+      const p = D.getProduct(b.productIds[0]);
+      return `<tr>
+        <td>${b.id}</td>
+        <td>${shop?.name || "—"}</td>
+        <td>${b.customerName || c?.name || "—"}</td>
+        <td>${p?.name || b.lookId || "—"}</td>
+        <td>${b.startDate} → ${b.endDate}</td>
+        <td>${formatINR(b.rentalTotal)}</td>
+        <td><span class="status ${b.status}">${b.status}</span></td>
+      </tr>`;
+    }).join("")}</tbody>`;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Search — Zivara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/zivara.css">
+</head>
+<body>
+<main class="container" style="padding:28px 0 48px">
+  <div class="eyebrow">Natural language discovery</div>
+  <h1 class="h1 mb-2">Search</h1>
+  <form class="search-bar" id="searchForm" style="margin:0;background:var(--zivara-paper);border:1px solid var(--zivara-line)">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#776F67" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="q" name="q" type="search" placeholder="traditional jewellery under ₹3000 for a reception" />
+    <button class="btn btn-primary btn-sm" type="submit">Search</button>
+  </form>
+  <div class="chips mt-2" id="suggestions">
+    <button type="button" class="chip chip-soft" data-q="temple jewellery for wedding">temple jewellery for wedding</button>
+    <button type="button" class="chip chip-soft" data-q="traditional jewellery under 3000">traditional under ₹3000</button>
+    <button type="button" class="chip chip-soft" data-q="pink saree jewellery">pink saree jewellery</button>
+    <button type="button" class="chip chip-soft" data-q="kundan for reception">kundan for reception</button>
+  </div>
+
+  <div id="interpreted" class="mt-3 hidden">
+    <div class="eyebrow mb-2">We understood</div>
+    <div class="chips" id="chips"></div>
+  </div>
+
+  <div class="section-head mt-3">
+    <h2 class="h3" id="resultTitle">Results</h2>
+    <span class="muted" id="count"></span>
+  </div>
+  <div class="masonry" id="results"></div>
+  <div class="empty hidden" id="empty">
+    <div class="h3">No matches</div>
+    <p>Try a broader prompt or open Explore.</p>
+    <a class="btn btn-primary mt-2" href="explore.html">Explore</a>
+  </div>
+</main>
+<script src="assets/js/images.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderConsumerNav, mountDemoBanner, interpretQuery, filterProducts, productCard, qs, $ } = Zivara;
+  mountDemoBanner();
+  renderConsumerNav("explore");
+
+  const input = $("#q");
+  const initial = qs("q") || "";
+  input.value = initial;
+
+  function run(q) {
+    const filters = interpretQuery(q);
+    const products = filterProducts(filters);
+    const hasInterp = filters.chips.length > 0;
+    $("#interpreted").classList.toggle("hidden", !hasInterp);
+    $("#chips").innerHTML = filters.chips.map(c => `<span class="chip chip-interpret">${c.label}</span>`).join("");
+    $("#results").innerHTML = products.map(p => productCard(p)).join("");
+    $("#count").textContent = products.length + " pieces";
+    $("#resultTitle").textContent = q ? `Results for “${q}”` : "Browse";
+    $("#empty").classList.toggle("hidden", products.length > 0);
+    Zivara.syncWishButtons();
+    history.replaceState(null, "", "search.html?q=" + encodeURIComponent(q || ""));
+  }
+
+  $("#searchForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    run(input.value.trim());
+  });
+  $("#suggestions").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-q]");
+    if (!b) return;
+    input.value = b.dataset.q;
+    run(b.dataset.q);
+  });
+
+  run(initial);
+});
+</script>
+</body>
+</html>

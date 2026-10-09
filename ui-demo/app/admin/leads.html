@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leads — Zivara Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/zivara.css">
+</head>
+<body>
+<div class="dash-top"><div><div class="eyebrow">Pipeline</div><h1 class="h1">Leads</h1></div></div>
+<p class="muted mb-3" style="font-size:13px">Views → Enquiries → Qualified → Booking → Completed</p>
+<div class="panel"><h3>Funnel</h3><div class="funnel" id="funnel"></div></div>
+<div class="panel"><h3>Recent lead activity</h3><div id="activity"></div></div>
+<script src="../assets/js/images.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderDashNav, mountDemoBanner, getRetailerBookings, getRetailerEnquiries, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderDashNav("admin", "leads");
+  const views = D.products.reduce((s,p)=>s+p.views,0);
+  const enquiries = getRetailerEnquiries();
+  const qualified = enquiries.filter(e => e.status === "contacted" || e.status === "converted");
+  const bookings = getRetailerBookings();
+  const completed = bookings.filter(b => b.status === "completed");
+  const stages = [
+    ["Views", views],
+    ["Enquiries", enquiries.length],
+    ["Qualified", qualified.length],
+    ["Booking", bookings.length],
+    ["Completed", completed.length],
+  ];
+  const max = stages[0][1] || 1;
+  $("#funnel").innerHTML = stages.map(([l,v]) => `
+    <div class="funnel-row"><span>${l}</span><div class="funnel-bar"><span style="width:${Math.max(4,(v/max)*100)}%"></span></div><span>${v}</span></div>`).join("");
+
+  $("#activity").innerHTML = enquiries.slice(0,10).map(e => {
+    const c = D.getCustomer(e.customerId);
+    const p = D.getProduct(e.productId);
+    const shop = D.getShop(e.shopId);
+    return `<div class="row-between" style="padding:10px 0;border-bottom:1px solid var(--zivara-line)">
+      <div><strong>${c?.name}</strong> · ${p?.name}<div class="muted" style="font-size:12px">${shop?.name} · ${e.intent}</div></div>
+      <span class="status ${e.status}">${e.status}</span>
+    </div>`;
+  }).join("");
+});
+</script>
+</body>
+</html>

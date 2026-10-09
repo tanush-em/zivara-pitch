@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Overview — Zivara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/zivara.css">
+</head>
+<body>
+<div class="dash-top">
+  <div><div class="eyebrow">Marketplace control tower</div><h1 class="h1">Overview</h1></div>
+</div>
+<div class="kpi-grid" id="kpis"></div>
+<div class="grid-2">
+  <div class="panel"><h3>Marketplace health</h3><div id="health"></div></div>
+  <div class="panel"><h3>Intelligence snapshot</h3><div id="intel"></div></div>
+</div>
+<div class="panel"><h3>Pending approvals</h3><div id="pending"></div></div>
+<script src="../assets/js/images.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderDashNav, mountDemoBanner, formatINR, getRetailerBookings, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderDashNav("admin", "dash");
+  const bookings = getRetailerBookings();
+  const gmv = bookings.reduce((s,b)=>s+b.rentalTotal,0);
+  const commission = Math.round(gmv * 0.12);
+
+  $("#kpis").innerHTML = [
+    ["Active shops", D.shops.filter(s=>s.status==="active").length],
+    ["Listed products", D.products.length],
+    ["Customers", D.customers.length],
+    ["Bookings", bookings.length],
+    ["GMV", formatINR(gmv)],
+    ["Zivara revenue", formatINR(commission)],
+  ].map(([l,v]) => `<div class="kpi"><div class="label">${l}</div><div class="value">${v}</div></div>`).join("");
+
+  $("#health").innerHTML = [
+    ["Bookings / day (demo)", "4.2"],
+    ["Enquiry conversion", "18%"],
+    ["Active inventory", D.products.filter(p=>p.availability==="available").length],
+    ["New shops (30d)", "1"],
+    ["Pending product approvals", D.products.filter(p=>p.status==="pending").length],
+  ].map(([l,v]) => `<div class="row-between" style="padding:10px 0;border-bottom:1px solid var(--zivara-line)"><span class="muted">${l}</span><strong>${v}</strong></div>`).join("");
+
+  $("#intel").innerHTML = D.intelligence.slice(0,3).map(i => `
+    <div class="insight"><strong>${i.title}</strong><span class="muted" style="font-size:13px">${i.body}</span></div>`).join("");
+
+  const pending = D.products.filter(p => p.status === "pending" || p.status === "flagged");
+  $("#pending").innerHTML = pending.length ? `<div class="table-wrap"><table class="data">
+    <thead><tr><th></th><th>Product</th><th>Shop</th><th>Status</th><th></th></tr></thead>
+    <tbody>${pending.map(p => {
+      const shop = D.getShop(p.shopId);
+      return `<tr>
+        <td><img class="thumb" src="${p.images[0]}" alt="" /></td>
+        <td>${p.name}</td><td>${shop.name}</td>
+        <td><span class="status ${p.status}">${p.status}</span></td>
+        <td><a class="btn btn-ghost btn-sm" href="products.html">Moderate</a></td>
+      </tr>`;
+    }).join("")}</tbody></table></div>` : `<p class="muted">No pending items</p>`;
+});
+</script>
+</body>
+</html>

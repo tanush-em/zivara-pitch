@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inventory — Zivara Retailer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/zivara.css">
+</head>
+<body>
+<div class="dash-top">
+  <div><div class="eyebrow">Catalogue</div><h1 class="h1">Inventory</h1></div>
+  <div class="row">
+    <button class="btn btn-ghost btn-sm" type="button" id="viewTable">Table</button>
+    <button class="btn btn-ghost btn-sm" type="button" id="viewGrid">Grid</button>
+    <a class="btn btn-primary btn-sm" href="product-editor.html">Add product</a>
+  </div>
+</div>
+<div id="content"></div>
+<script src="../assets/js/images.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderDashNav, mountDemoBanner, formatINR, toast, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderDashNav("retailer", "inventory");
+  let mode = "table";
+  const products = D.productsByShop(D.retailerShopId);
+
+  function render() {
+    if (mode === "table") {
+      $("#content").innerHTML = `<div class="panel"><div class="table-wrap"><table class="data">
+        <thead><tr><th></th><th>Name</th><th>Rent</th><th>Buy</th><th>Avail</th><th>Views</th><th>Enquiries</th><th>Status</th><th></th></tr></thead>
+        <tbody>${products.map(p => `
+          <tr>
+            <td><img class="thumb" src="${p.images[0]}" alt="" /></td>
+            <td><strong>${p.name}</strong><div class="muted" style="font-size:11px">${p.category}</div></td>
+            <td>${formatINR(p.rentalPrice)}</td>
+            <td>${formatINR(p.purchasePrice)}</td>
+            <td>${p.availability}</td>
+            <td>${p.views}</td>
+            <td>${p.enquiries}</td>
+            <td><span class="status ${p.status}">${p.status}</span></td>
+            <td class="row">
+              <a class="btn btn-ghost btn-sm" href="product-editor.html?id=${p.id}">Edit</a>
+              <a class="btn btn-ghost btn-sm" href="../product.html?id=${p.id}" target="_blank">Preview</a>
+            </td>
+          </tr>`).join("")}</tbody></table></div></div>`;
+    } else {
+      $("#content").innerHTML = `<div class="grid-4">${products.map(p => `
+        <div class="media-card">
+          <div class="media square"><img src="${p.images[0]}" alt="${p.name}" loading="lazy" /></div>
+          <div class="meta">
+            <div class="name">${p.name}</div>
+            <div class="price">${formatINR(p.rentalPrice)} · ${p.status}</div>
+            <a class="btn btn-ghost btn-sm mt-1" href="product-editor.html?id=${p.id}">Edit</a>
+          </div>
+        </div>`).join("")}</div>`;
+    }
+  }
+  $("#viewTable").onclick = () => { mode = "table"; render(); };
+  $("#viewGrid").onclick = () => { mode = "grid"; render(); };
+  render();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Product Editor — Zivara Retailer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/zivara.css">
+</head>
+<body>
+<div class="dash-top">
+  <div><div class="eyebrow">Inventory</div><h1 class="h1" id="title">Add product</h1></div>
+  <a class="btn btn-ghost btn-sm" href="inventory.html">Back</a>
+</div>
+<div class="panel" id="form"></div>
+<script src="../assets/js/images.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderDashNav, mountDemoBanner, qs, toast, formatINR, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderDashNav("retailer", "editor");
+  const existing = qs("id") ? D.getProduct(qs("id")) : null;
+  if (existing) $("#title").textContent = "Edit · " + existing.name;
+
+  const p = existing || {
+    name: "", category: "necklace", style: ["bridal"], occasion: ["wedding"],
+    rentalPrice: 1500, purchasePrice: 5000, deposit: 1000, availability: "available",
+    description: "", tags: [], images: [D.products[0].images[0]],
+  };
+
+  $("#form").innerHTML = `
+    <div class="grid-2">
+      <div>
+        <div class="form-row"><label>Hero image URL</label><input id="img" value="${p.images[0]}" /></div>
+        <img id="preview" src="${p.images[0]}" alt="" style="width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:12px;background:var(--zivara-soft)" />
+      </div>
+      <div>
+        <div class="form-row"><label>Name</label><input id="name" value="${p.name}" /></div>
+        <div class="form-grid two">
+          <div class="form-row"><label>Category</label>
+            <select id="category">${["necklace","earrings","bangles","choker","maang-tikka","complete-set","miscellaneous"].map(c=>`<option ${c===p.category?"selected":""}>${c}</option>`).join("")}</select>
+          </div>
+          <div class="form-row"><label>Availability</label>
+            <select id="availability"><option>available</option><option>reserved</option><option>archived</option></select>
+          </div>
+        </div>
+        <div class="form-row"><label>Style (comma)</label><input id="style" value="${(p.style||[]).join(", ")}" /></div>
+        <div class="form-row"><label>Occasion (comma)</label><input id="occasion" value="${(p.occasion||[]).join(", ")}" /></div>
+        <div class="form-grid two">
+          <div class="form-row"><label>Rental ₹</label><input type="number" id="rental" value="${p.rentalPrice}" /></div>
+          <div class="form-row"><label>Purchase ₹</label><input type="number" id="purchase" value="${p.purchasePrice}" /></div>
+        </div>
+        <div class="form-row"><label>Deposit ₹</label><input type="number" id="deposit" value="${p.deposit}" /></div>
+        <div class="form-row"><label>Description</label><textarea id="desc" rows="4">${p.description||""}</textarea></div>
+        <div class="form-row"><label>Tags</label><input id="tags" value="${(p.tags||[]).join(", ")}" /></div>
+        <button class="btn btn-primary mt-2" type="button" id="save">${existing ? "Save changes" : "Create product"}</button>
+        <p class="muted mt-1" style="font-size:12px">Demo only — changes toast success; catalogue seed is not permanently mutated.</p>
+      </div>
+    </div>`;
+  $("#availability").value = p.availability || "available";
+  $("#img").oninput = () => { $("#preview").src = $("#img").value; };
+  $("#save").onclick = () => {
+    if (!$("#name").value.trim()) return toast("Name required");
+    toast(existing ? "Product updated (demo)" : "Product created (demo)");
+    setTimeout(() => location.href = "inventory.html", 700);
+  };
+});
+</script>
+</body>
+</html>

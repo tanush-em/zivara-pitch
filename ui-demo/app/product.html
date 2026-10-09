@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jewellery — Zivara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/zivara.css">
+</head>
+<body>
+<main class="container" id="main">
+  <div class="empty"><div class="h3">Loading…</div></div>
+</main>
+<script src="assets/js/images.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderConsumerNav, mountDemoBanner, qs, formatINR, stars, productCard, toast, nextEnquiryId, addEnquiry, trackView, heartSVG, isWished, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderConsumerNav("explore");
+
+  const p = D.getProduct(qs("id") || "ZV001");
+  if (!p) {
+    $("#main").innerHTML = `<div class="empty"><div class="h3">Piece not found</div><a class="btn btn-primary mt-2" href="explore.html">Explore</a></div>`;
+    return;
+  }
+  trackView(p.id);
+  const shop = D.getShop(p.shopId);
+  const look = D.looksForProduct(p.id)[0];
+  const similar = D.products.filter(x => x.id !== p.id && (x.category === p.category || x.style.some(s => p.style.includes(s)))).slice(0, 6);
+  document.title = `${p.name} — Zivara`;
+
+  $("#main").innerHTML = `
+    <div class="pd-layout">
+      <div class="pd-gallery">
+        <div class="pd-main"><img id="mainImg" src="${p.images[0]}" alt="${p.name}" /></div>
+        <div class="pd-thumbs" id="thumbs">
+          ${p.images.map((src,i) => `<button type="button" class="${i===0?"active":""}" data-src="${src}"><img src="${src}" alt="" loading="lazy" /></button>`).join("")}
+        </div>
+      </div>
+      <div class="pd-panel">
+        <div class="row-between">
+          <div class="eyebrow">${p.category.replace("-", " ")} · ${p.finish}</div>
+          <button class="icon-btn" data-wish="product" data-id="${p.id}" aria-label="Save">${heartSVG(isWished("product", p.id))}</button>
+        </div>
+        <h1 class="h1 mt-1">${p.name}</h1>
+        <div class="stars mt-1">${stars(p.rating)} <span class="muted">(${p.reviewCount})</span></div>
+        <div class="price-row">
+          <div class="price-block"><div class="label">Rent</div><div class="value">${formatINR(p.rentalPrice)}</div></div>
+          <div class="price-block"><div class="label">Buy</div><div class="value">${formatINR(p.purchasePrice)}</div></div>
+          <div class="price-block"><div class="label">Deposit</div><div class="value" style="font-size:22px">${formatINR(p.deposit)}</div></div>
+        </div>
+        <p class="muted">${p.description}</p>
+        <div class="tag-list mt-2">${p.tags.slice(0,6).map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+
+        <div class="form-row mt-3">
+          <label>Availability window</label>
+          <input type="date" id="startDate" />
+        </div>
+        <p class="muted" id="availNote" style="font-size:13px">Select a start date to check demo availability.</p>
+
+        <a class="shop-pill mt-2" href="shop.html?id=${shop.id}">
+          <img src="${shop.image}" alt="" />
+          <div>
+            <strong>${shop.name}</strong>
+            <div class="muted" style="font-size:13px">${shop.locality} · ${shop.distanceKm} km · ★ ${shop.rating}</div>
+          </div>
+        </a>
+
+        <div class="pd-actions">
+          <a class="btn btn-primary" id="reserveBtn" href="book.html?id=${p.id}">Reserve for rental</a>
+          <button class="btn btn-gold" type="button" id="buyBtn">Buy / Enquire</button>
+          <button class="btn btn-ghost" type="button" id="waBtn">Contact shop (WhatsApp sim)</button>
+        </div>
+        <p class="muted" style="font-size:12px">Simulated — no real payment or WhatsApp API.</p>
+      </div>
+    </div>
+
+    ${look ? `
+    <section class="section" style="padding-top:12px">
+      <div class="section-head">
+        <div><div class="eyebrow">Complete the look</div><h2 class="h2">${look.name}</h2></div>
+        <a class="link-arrow" href="look.html?id=${look.id}">View look →</a>
+      </div>
+      <a class="media-card look-card" href="look.html?id=${look.id}" style="max-width:420px">
+        <div class="media landscape"><img src="${look.heroImage}" alt="${look.name}" loading="lazy" /></div>
+        <div class="meta"><div class="name">Bundle rent ${formatINR(look.rentalPrice)}</div><div class="price">Save ${formatINR(look.savings)} vs separate</div></div>
+      </a>
+    </section>` : ""}
+
+    <section class="section" style="padding-top:8px">
+      <div class="section-head"><div><div class="eyebrow">Similar</div><h2 class="h2">You may also like</h2></div></div>
+      <div class="masonry" id="similar"></div>
+    </section>
+  `;
+
+  $("#thumbs").addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    $("#mainImg").src = b.dataset.src;
+    [...$("#thumbs").children].forEach(c => c.classList.toggle("active", c === b));
+  });
+
+  const blocked = new Set(p.availableDates.blockedDays);
+  $("#startDate").addEventListener("change", () => {
+    const d = new Date($("#startDate").value + "T12:00:00");
+    const day = d.getDate();
+    const ok = !blocked.has(day);
+    $("#availNote").textContent = ok
+      ? `Available around ${$("#startDate").value} at ${shop.name}. Deposit ${formatINR(p.deposit)} held on pickup (demo).`
+      : `Limited / blocked on day ${day} in this demo calendar. Try another date.`;
+    $("#availNote").style.color = ok ? "var(--zivara-success)" : "var(--zivara-danger)";
+    $("#reserveBtn").href = `book.html?id=${p.id}&start=${$("#startDate").value}`;
+  });
+
+  $("#buyBtn").addEventListener("click", () => {
+    addEnquiry({
+      id: nextEnquiryId(),
+      customerId: D.currentUser.id,
+      shopId: shop.id,
+      productId: p.id,
+      lookId: null,
+      type: "purchase",
+      message: `Purchase enquiry for ${p.name}`,
+      status: "open",
+      createdAt: new Date().toISOString(),
+      intent: "buy",
+    });
+    toast("Enquiry sent to " + shop.name);
+  });
+  $("#waBtn").addEventListener("click", () => {
+    toast(`Opening WhatsApp to ${shop.whatsapp}… (simulated)`);
+  });
+
+  $("#similar").innerHTML = similar.map(x => productCard(x)).join("");
+  Zivara.syncWishButtons();
+});
+</script>
+</body>
+</html>

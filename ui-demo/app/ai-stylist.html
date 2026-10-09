@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Stylist — Zivara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/zivara.css">
+</head>
+<body>
+<main class="container-narrow" style="padding:28px 0 64px" id="main">
+  <div class="eyebrow">Premium discovery</div>
+  <h1 class="h1">AI Stylist</h1>
+  <p class="lead mb-3">Guided inputs → three recommended looks with reasoning. Deterministic demo scoring — not production ML.</p>
+  <div id="stage"></div>
+</main>
+<script src="assets/js/images.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderConsumerNav, mountDemoBanner, runAIProcess, recommendLooks, formatINR, $ } = Zivara;
+  mountDemoBanner();
+  renderConsumerNav("ai");
+
+  const saved = JSON.parse(localStorage.getItem("zivara_ai_prefs") || "{}");
+  const prefs = {
+    occasion: "wedding",
+    outfit: "pink Kanchipuram saree",
+    style: saved.style || "temple",
+    budget: saved.budget || 4000,
+    heaviness: saved.heaviness || "medium",
+    intent: "rent",
+    colour: "pink",
+  };
+
+  function formView() {
+    $("#stage").innerHTML = `
+      <div class="panel">
+        <p class="muted" style="font-size:13px;margin-bottom:14px">Demo prompt: “I have a pink Kanchipuram saree for my cousin’s wedding. Traditional but not too heavy. Under ₹4,000 rental.”</p>
+        <div class="form-grid two">
+          <div class="form-row"><label>Occasion</label>
+            <select id="occasion">
+              <option value="wedding">Wedding</option>
+              <option value="reception">Reception</option>
+              <option value="engagement">Engagement</option>
+              <option value="festival">Festival</option>
+              <option value="function">Function</option>
+              <option value="wedding-guest">Wedding guest</option>
+            </select>
+          </div>
+          <div class="form-row"><label>Rent / Buy</label>
+            <select id="intent"><option value="rent">Rent</option><option value="buy">Buy</option></select>
+          </div>
+        </div>
+        <div class="form-row"><label>Outfit / saree</label>
+          <input id="outfit" value="${prefs.outfit}" placeholder="e.g. pink Kanchipuram saree" />
+        </div>
+        <div class="form-grid two">
+          <div class="form-row"><label>Style</label>
+            <select id="style">
+              <option value="temple">Temple / traditional</option>
+              <option value="kundan">Kundan</option>
+              <option value="polki">Polki</option>
+              <option value="bridal">Bridal heavy</option>
+              <option value="modern">Modern light</option>
+              <option value="fashion">Fashion / guest</option>
+            </select>
+          </div>
+          <div class="form-row"><label>Heaviness</label>
+            <select id="heaviness">
+              <option value="light">Light</option>
+              <option value="medium" selected>Medium — not too heavy</option>
+              <option value="heavy">Heavy bridal</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row"><label>Budget (rental)</label>
+          <input type="range" id="budget" min="1000" max="6000" step="100" value="${prefs.budget}" />
+          <div class="muted" id="budgetLabel">${formatINR(prefs.budget)}</div>
+        </div>
+        <button class="btn btn-gold btn-block mt-2" type="button" id="go">Build my looks</button>
+      </div>`;
+    $("#occasion").value = prefs.occasion;
+    $("#style").value = prefs.style;
+    $("#heaviness").value = prefs.heaviness;
+    $("#budget").oninput = () => { $("#budgetLabel").textContent = formatINR($("#budget").value); };
+    $("#go").onclick = async () => {
+      prefs.occasion = $("#occasion").value;
+      prefs.outfit = $("#outfit").value;
+      prefs.style = $("#style").value;
+      prefs.heaviness = $("#heaviness").value;
+      prefs.budget = Number($("#budget").value);
+      prefs.intent = $("#intent").value;
+      const o = prefs.outfit.toLowerCase();
+      prefs.colour = ["pink","red","green","maroon","purple","gold"].find(c => o.includes(c)) || null;
+      await runAIProcess($("#stage"), [
+        "Understanding your occasion",
+        "Matching styles to your saree",
+        "Checking nearby collections",
+        "Building your look",
+      ], 850);
+      showResults();
+    };
+  }
+
+  function showResults() {
+    const recs = recommendLooks(prefs, 3);
+    $("#stage").innerHTML = `
+      <div class="row-between mb-3">
+        <div>
+          <div class="eyebrow">Your matches</div>
+          <h2 class="h2">3 looks for ${prefs.outfit}</h2>
+        </div>
+        <button class="btn btn-ghost btn-sm" type="button" id="again">Edit inputs</button>
+      </div>
+      <div class="grid-3" id="recs"></div>`;
+    $("#recs").innerHTML = recs.map((r, i) => `
+      <article class="reco-card">
+        <img src="${r.look.heroImage}" alt="${r.look.name}" loading="lazy" />
+        <div class="body">
+          <div class="eyebrow">Match ${Math.round(r.score * 100)}%</div>
+          <h3 class="h3">${r.look.name}</h3>
+          <p class="reason">${r.reasons.slice(0,3).join(" · ")}</p>
+          <div class="muted" style="font-size:13px;margin-bottom:10px">
+            ${r.pieces.length} pieces · Bundle ${formatINR(r.look.rentalPrice)}
+          </div>
+          <div class="score-bar"><span style="width:${Math.round(r.score*100)}%"></span></div>
+          <div class="row mt-2">
+            <a class="btn btn-primary btn-sm" href="look.html?id=${r.look.id}">Open look</a>
+            <a class="btn btn-ghost btn-sm" href="book.html?id=${r.pieces[0].id}&look=${r.look.id}">Reserve</a>
+          </div>
+        </div>
+      </article>`).join("");
+    $("#again").onclick = formView;
+  }
+
+  formView();
+});
+</script>
+</body>
+</html>

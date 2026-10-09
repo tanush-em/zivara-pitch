@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marketplace Intelligence — Zivara Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/zivara.css">
+</head>
+<body>
+<div class="dash-top">
+  <div>
+    <div class="eyebrow">Signals</div>
+    <h1 class="h1">Marketplace intelligence</h1>
+    <p class="lead">Demand trends, supply gaps, price bands and emerging styles — demo insight cards.</p>
+  </div>
+</div>
+<div class="grid-2" id="cards"></div>
+<div class="panel mt-2">
+  <h3>Style popularity (views)</h3>
+  <div class="funnel" id="styles"></div>
+</div>
+<script src="../assets/js/images.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderDashNav, mountDemoBanner, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderDashNav("admin", "intel");
+
+  $("#cards").innerHTML = D.intelligence.map(i => `
+    <div class="insight" style="margin:0">
+      <strong>${i.title}</strong>
+      <p class="muted" style="font-size:14px;margin-top:6px">${i.body}</p>
+    </div>`).join("");
+
+  const styles = {};
+  D.products.forEach(p => p.style.forEach(s => { styles[s] = (styles[s]||0) + p.views; }));
+  const sorted = Object.entries(styles).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const max = sorted[0]?.[1] || 1;
+  $("#styles").innerHTML = sorted.map(([k,v]) => `
+    <div class="funnel-row"><span>${k}</span><div class="funnel-bar"><span style="width:${(v/max)*100}%"></span></div><span>${v}</span></div>`).join("");
+});
+</script>
+</body>
+</html>

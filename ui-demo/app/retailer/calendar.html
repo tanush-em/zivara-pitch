@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calendar — Zivara Retailer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/zivara.css">
+</head>
+<body>
+<div class="dash-top">
+  <div><div class="eyebrow">Schedule</div><h1 class="h1">Rental calendar</h1></div>
+</div>
+<div class="grid-2">
+  <div class="panel">
+    <h3 id="monthLabel"></h3>
+    <div class="cal-grid" id="cal"></div>
+  </div>
+  <div class="panel">
+    <h3>Reservations this month</h3>
+    <div id="list"></div>
+  </div>
+</div>
+<script src="../assets/js/images.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderDashNav, mountDemoBanner, getRetailerBookings, formatINR, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderDashNav("retailer", "calendar");
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  $("#monthLabel").textContent = now.toLocaleString("en-IN", { month: "long", year: "numeric" });
+  const bookings = getRetailerBookings().filter(b => b.shopId === D.retailerShopId);
+  const busyDays = new Set();
+  bookings.forEach(b => {
+    const s = new Date(b.startDate + "T12:00:00");
+    const e = new Date(b.endDate + "T12:00:00");
+    for (let d = new Date(s); d <= e; d.setDate(d.getDate() + 1)) {
+      if (d.getMonth() === month) busyDays.add(d.getDate());
+    }
+  });
+  const firstDow = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const heads = ["Su","Mo","Tu","We","Th","Fr","Sa"].map(h => `<div class="day head">${h}</div>`).join("");
+  let cells = "";
+  for (let i = 0; i < firstDow; i++) cells += `<div class="day" style="opacity:0"></div>`;
+  for (let d = 1; d <= daysInMonth; d++) {
+    cells += `<div class="day ${busyDays.has(d) ? "has" : ""}" title="${busyDays.has(d)?"Has reservation":""}">${d}</div>`;
+  }
+  $("#cal").innerHTML = heads + cells;
+  $("#list").innerHTML = bookings.map(b => {
+    const p = D.getProduct(b.productIds[0]);
+    return `<div class="row-between" style="padding:10px 0;border-bottom:1px solid var(--zivara-line)">
+      <div><strong>${p?.name || b.id}</strong><div class="muted" style="font-size:12px">${b.startDate} → ${b.endDate}</div></div>
+      <span class="status ${b.status}">${b.status}</span>
+    </div>`;
+  }).join("") || "<p class='muted'>No reservations</p>";
+});
+</script>
+</body>
+</html>

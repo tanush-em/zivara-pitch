@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zivara — Discover jewellery near you</title>
+<meta name="description" content="Visual jewellery discovery and local marketplace for Chennai. Rent or buy from trusted shops.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/zivara.css">
+</head>
+<body>
+<main>
+  <section class="hero" id="hero">
+    <div class="hero-media"><img id="heroImg" alt="Bridal jewellery editorial" /></div>
+    <div class="hero-scrim"></div>
+    <div class="hero-content">
+      <div class="eyebrow" style="color:rgba(255,252,247,.7)">Chennai · Local shops · Rent & buy</div>
+      <h1 class="display">ZIVARA</h1>
+      <p class="lead">Discover jewellery from neighbourhood stores. Rent it for the moment. Buy it if you love it.</p>
+      <form class="search-bar" id="homeSearch" action="search.html" method="get">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#776F67" stroke-width="1.7"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input name="q" type="search" placeholder="Try “temple jewellery under ₹3000”" autocomplete="off" />
+        <button class="btn btn-primary btn-sm" type="submit">Search</button>
+      </form>
+      <div class="hero-actions">
+        <a class="btn btn-gold" href="explore.html">Explore jewellery</a>
+        <a class="btn btn-ghost" style="border-color:rgba(255,255,255,.35);color:#fff" href="ai-stylist.html">AI Stylist</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="chips" id="occasionChips"></div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Trending in Chennai</div>
+          <h2 class="h2">Pieces everyone is saving</h2>
+        </div>
+        <a class="link-arrow" href="explore.html">See all →</a>
+      </div>
+      <div class="masonry" id="trendingMasonry"></div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--zivara-paper)">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Shop by occasion</div>
+          <h2 class="h2">Dress the moment</h2>
+        </div>
+      </div>
+      <div class="occasion-grid" id="occasionGrid"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Complete looks</div>
+          <h2 class="h2">Styled combinations</h2>
+          <p class="lead">Rent an entire look as a bundle and save versus booking pieces separately.</p>
+        </div>
+        <a class="link-arrow" href="looks.html">All looks →</a>
+      </div>
+      <div class="grid-3" id="looksGrid"></div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--zivara-paper)">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Rental collection</div>
+          <h2 class="h2">Under ₹2,000</h2>
+        </div>
+        <a class="link-arrow" href="search.html?q=jewellery%20under%202000">Browse →</a>
+      </div>
+      <div class="masonry" id="rentalMasonry"></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Just listed</div>
+          <h2 class="h2">New arrivals</h2>
+        </div>
+      </div>
+      <div class="grid-4" id="newArrivals"></div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--zivara-paper)">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Featured stores</div>
+          <h2 class="h2">Trusted local partners</h2>
+        </div>
+        <a class="link-arrow" href="shops.html">All shops →</a>
+      </div>
+      <div class="grid-shops" id="featuredShops"></div>
+    </div>
+  </section>
+
+  <section class="cta-band" id="aiCta">
+    <img id="aiCtaImg" alt="" />
+    <div class="inner">
+      <div class="eyebrow" style="color:rgba(255,252,247,.7)">AI Stylist</div>
+      <h2 class="h2">Tell us the occasion. We’ll build the look.</h2>
+      <p class="lead" style="margin:0 auto 20px;color:rgba(255,252,247,.8)">Guided styling for sarees, budgets and heaviness — not a generic chatbot.</p>
+      <a class="btn btn-gold" href="ai-stylist.html">Start AI Stylist</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Nearby</div>
+          <h2 class="h2">Shops around you</h2>
+        </div>
+      </div>
+      <div class="grid-shops" id="nearbyShops"></div>
+    </div>
+  </section>
+
+  <section class="section" style="background:var(--zivara-paper)">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Editorial</div>
+          <h2 class="h2">Inspiration</h2>
+        </div>
+      </div>
+      <div class="masonry" id="editorialMasonry"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container text-center">
+    <a class="brand" href="index.html">ZIVARA</a>
+    <p class="muted">Visual discovery · Local jewellery marketplace · Rental infrastructure</p>
+    <div class="surface-links">
+      <a href="index.html">Consumer</a>
+      <a href="retailer/index.html">Retailer OS</a>
+      <a href="admin/index.html">Admin</a>
+      <a href="visual-search.html">Visual Search</a>
+      <a href="saree-matcher.html">Saree Matcher</a>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/images.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderConsumerNav, mountDemoBanner, productCard, lookCard, shopCard, editorialCard, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderConsumerNav("home");
+
+  const heroLook = D.looks.find(l => l.id === "LOOK01") || D.looks[0];
+  $("#heroImg").src = heroLook.heroImage;
+  $("#aiCtaImg").src = (D.editorial[2] || D.editorial[0]).hero;
+
+  const occasions = [
+    { id: "wedding", label: "Wedding" },
+    { id: "reception", label: "Reception" },
+    { id: "engagement", label: "Engagement" },
+    { id: "festival", label: "Festival" },
+    { id: "function", label: "Function" },
+    { id: "wedding-guest", label: "Wedding guest" },
+  ];
+  $("#occasionChips").innerHTML = occasions.map(o =>
+    `<a class="chip" href="search.html?q=${encodeURIComponent(o.label + " jewellery")}">${o.label}</a>`
+  ).join("") + `<a class="chip chip-soft" href="ai-stylist.html">Ask AI Stylist</a>`;
+
+  $("#trendingMasonry").innerHTML = D.products.filter(p => p.trending).slice(0, 8).map(p => productCard(p)).join("");
+
+  const occImgs = {
+    wedding: D.looks[0].heroImage,
+    reception: D.products.find(p => p.id === "ZV019").images[0],
+    engagement: D.looks[11].heroImage,
+    festival: D.products.find(p => p.id === "ZV017").images[0],
+  };
+  $("#occasionGrid").innerHTML = [
+    ["wedding", "Wedding"], ["reception", "Reception"], ["engagement", "Engagement"], ["festival", "Festival"]
+  ].map(([id, label]) => `
+    <a class="occasion-tile" href="search.html?q=${encodeURIComponent(label + " jewellery")}">
+      <img src="${occImgs[id]}" alt="${label}" loading="lazy" />
+      <span>${label}</span>
+    </a>`).join("");
+
+  $("#looksGrid").innerHTML = D.looks.filter(l => l.featured).slice(0, 3).map(l => `
+    <a class="media-card look-card" href="look.html?id=${l.id}">
+      <div class="media"><img src="${l.heroImage}" alt="${l.name}" loading="lazy" /><span class="badge">Look</span></div>
+      <div class="meta"><div class="name">${l.name}</div><div class="price">Bundle from ${Zivara.formatINR(l.rentalPrice)}</div></div>
+    </a>`).join("");
+
+  $("#rentalMasonry").innerHTML = D.products.filter(p => p.rentalPrice <= 2000).slice(0, 8).map(p => productCard(p)).join("");
+  $("#newArrivals").innerHTML = D.products.filter(p => p.newArrival).slice(0, 4).map(p => `
+    <a class="media-card" href="product.html?id=${p.id}">
+      <div class="media square"><img src="${p.images[0]}" alt="${p.name}" loading="lazy" /></div>
+      <div class="meta"><div class="name">${p.name}</div><div class="price">Rent ${Zivara.formatINR(p.rentalPrice)}</div></div>
+    </a>`).join("");
+
+  $("#featuredShops").innerHTML = D.shops.filter(s => s.featured).map(shopCard).join("");
+  $("#nearbyShops").innerHTML = [...D.shops].sort((a,b)=>a.distanceKm-b.distanceKm).slice(0,3).map(shopCard).join("");
+  $("#editorialMasonry").innerHTML = D.editorial.slice(0, 6).map(editorialCard).join("");
+  Zivara.syncWishButtons();
+});
+</script>
+</body>
+</html>

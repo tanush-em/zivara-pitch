@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Profile — Zivara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/zivara.css">
+</head>
+<body>
+<main class="container" style="padding:28px 0 48px">
+  <div class="row gap-2 mb-3">
+    <div style="width:64px;height:64px;border-radius:50%;background:var(--zivara-soft);display:grid;place-items:center;font-family:var(--font-serif);font-size:28px" id="avatar">A</div>
+    <div>
+      <div class="eyebrow">Demo customer</div>
+      <h1 class="h1" id="name">—</h1>
+      <p class="muted" id="meta"></p>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button type="button" class="tab active" data-tab="saved">Saved</button>
+    <button type="button" class="tab" data-tab="bookings">Rentals</button>
+    <button type="button" class="tab" data-tab="recent">Recent</button>
+    <button type="button" class="tab" data-tab="prefs">AI prefs</button>
+    <button type="button" class="tab" data-tab="settings">Settings</button>
+  </div>
+  <div id="content"></div>
+</main>
+<script src="assets/js/images.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderConsumerNav, mountDemoBanner, getWishlist, getUserBookings, getRecentlyViewed, productCard, formatINR, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderConsumerNav("profile");
+  const u = D.currentUser;
+  $("#name").textContent = u.name;
+  $("#avatar").textContent = u.name[0];
+  $("#meta").textContent = `${u.locality} · ${u.email}`;
+  let tab = "saved";
+
+  function render() {
+    const w = getWishlist();
+    if (tab === "saved") {
+      $("#content").innerHTML = `
+        <div class="kpi-grid">
+          <div class="kpi"><div class="label">Jewellery</div><div class="value">${w.products.length}</div></div>
+          <div class="kpi"><div class="label">Looks</div><div class="value">${w.looks.length}</div></div>
+          <div class="kpi"><div class="label">Shops</div><div class="value">${w.shops.length}</div></div>
+          <div class="kpi"><div class="label">Wishlist</div><div class="value"><a href="wishlist.html" class="link-arrow">Open →</a></div></div>
+        </div>
+        <div class="masonry">${w.products.slice(0,6).map(id => D.getProduct(id)).filter(Boolean).map(p => productCard(p)).join("") || "<p class='muted'>Nothing saved yet.</p>"}</div>`;
+    } else if (tab === "bookings") {
+      const bookings = getUserBookings();
+      $("#content").innerHTML = bookings.length ? `<div class="panel"><div class="table-wrap"><table class="data">
+        <thead><tr><th>ID</th><th>Piece</th><th>Dates</th><th>Total</th><th>Status</th></tr></thead>
+        <tbody>${bookings.map(b => {
+          const p = D.getProduct(b.productIds[0]);
+          return `<tr><td>${b.id}</td><td>${p ? p.name : "—"}</td><td>${b.startDate} → ${b.endDate}</td><td>${formatINR(b.rentalTotal)}</td><td><span class="status ${b.status}">${b.status}</span></td></tr>`;
+        }).join("")}</tbody></table></div></div>`
+        : `<div class="empty"><div class="h3">No rentals yet</div><a class="btn btn-primary mt-2" href="explore.html">Find jewellery</a></div>`;
+    } else if (tab === "recent") {
+      const recent = getRecentlyViewed();
+      $("#content").innerHTML = recent.length
+        ? `<div class="masonry">${recent.map(p => productCard(p)).join("")}</div>`
+        : `<div class="empty"><div class="h3">Nothing viewed yet</div></div>`;
+    } else if (tab === "prefs") {
+      $("#content").innerHTML = `
+        <div class="panel stack">
+          <p class="muted">These preferences feed the AI Stylist demo scorer.</p>
+          <div class="form-row"><label>Preferred style</label>
+            <select id="prefStyle"><option>temple</option><option>kundan</option><option>polki</option><option>bridal</option><option>modern</option></select>
+          </div>
+          <div class="form-row"><label>Typical rental budget</label>
+            <input type="number" id="prefBudget" value="3000" />
+          </div>
+          <div class="form-row"><label>Heaviness</label>
+            <select id="prefHeavy"><option>light</option><option selected>medium</option><option>heavy</option></select>
+          </div>
+          <button class="btn btn-primary" type="button" id="savePrefs">Save preferences</button>
+        </div>`;
+      const saved = JSON.parse(localStorage.getItem("zivara_ai_prefs") || "{}");
+      if (saved.style) $("#prefStyle").value = saved.style;
+      if (saved.budget) $("#prefBudget").value = saved.budget;
+      if (saved.heaviness) $("#prefHeavy").value = saved.heaviness;
+      $("#savePrefs").onclick = () => {
+        localStorage.setItem("zivara_ai_prefs", JSON.stringify({
+          style: $("#prefStyle").value,
+          budget: Number($("#prefBudget").value),
+          heaviness: $("#prefHeavy").value,
+        }));
+        Zivara.toast("Preferences saved");
+      };
+    } else {
+      $("#content").innerHTML = `
+        <div class="panel stack">
+          <div><strong>Account</strong><div class="muted">Demo mode — no real authentication.</div></div>
+          <div><strong>City</strong><div class="muted">Chennai</div></div>
+          <div><strong>Notifications</strong><div class="muted">Booking reminders (simulated)</div></div>
+          <a class="btn btn-ghost" href="retailer/index.html">Open Retailer OS</a>
+          <a class="btn btn-ghost" href="admin/index.html">Open Admin</a>
+        </div>`;
+    }
+    Zivara.syncWishButtons();
+  }
+
+  $("#tabs").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-tab]");
+    if (!b) return;
+    tab = b.dataset.tab;
+    [...$("#tabs").children].forEach(c => c.classList.toggle("active", c === b));
+    render();
+  });
+  render();
+});
+</script>
+</body>
+</html>

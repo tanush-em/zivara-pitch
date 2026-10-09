@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Look — Zivara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/zivara.css">
+</head>
+<body>
+<main class="container" id="main" style="padding-bottom:48px">
+  <div class="empty"><div class="h3">Loading…</div></div>
+</main>
+<script src="assets/js/images.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderConsumerNav, mountDemoBanner, qs, formatINR, productCard, heartSVG, isWished, toast, nextEnquiryId, addEnquiry, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderConsumerNav("looks");
+  const look = D.getLook(qs("id") || "LOOK01");
+  if (!look) {
+    $("#main").innerHTML = `<div class="empty"><div class="h3">Look not found</div><a class="btn btn-primary mt-2" href="looks.html">All looks</a></div>`;
+    return;
+  }
+  document.title = `${look.name} — Zivara`;
+  const shop = D.getShop(look.shopId);
+  const pieces = look.productIds.map(id => D.getProduct(id));
+
+  $("#main").innerHTML = `
+    <div class="pd-layout" style="padding-top:24px">
+      <div>
+        <div class="pd-main" style="aspect-ratio:3/4"><img src="${look.heroImage}" alt="${look.name}" /></div>
+      </div>
+      <div class="pd-panel">
+        <div class="row-between">
+          <div class="eyebrow">${look.occasion.replace("-"," ")} · ${look.style.join(" · ")}</div>
+          <button class="icon-btn" data-wish="look" data-id="${look.id}" aria-label="Save">${heartSVG(isWished("look", look.id))}</button>
+        </div>
+        <h1 class="h1 mt-1">${look.name}</h1>
+        <p class="muted mt-2">${look.description}</p>
+        <div class="price-row">
+          <div class="price-block"><div class="label">Bundle rent</div><div class="value">${formatINR(look.rentalPrice)}</div></div>
+          <div class="price-block"><div class="label">If separate</div><div class="value" style="font-size:22px;text-decoration:line-through;color:var(--zivara-muted)">${formatINR(look.originalRentalTotal)}</div></div>
+          <div class="price-block"><div class="label">You save</div><div class="value" style="font-size:22px;color:var(--zivara-success)">${formatINR(look.savings)}</div></div>
+        </div>
+        <a class="shop-pill" href="shop.html?id=${shop.id}">
+          <img src="${shop.image}" alt="" />
+          <div><strong>${shop.name}</strong><div class="muted" style="font-size:13px">${shop.locality}, ${shop.city}</div></div>
+        </a>
+        <div class="pd-actions">
+          <a class="btn btn-primary" href="book.html?id=${pieces[0].id}&look=${look.id}">Rent complete look</a>
+          <button class="btn btn-ghost" type="button" id="enquire">Enquire with shop</button>
+          <button class="btn btn-soft" type="button" id="share">Share look</button>
+        </div>
+      </div>
+    </div>
+    <section class="section" style="padding-top:8px">
+      <div class="section-head"><div><div class="eyebrow">${pieces.length} pieces</div><h2 class="h2">Open individual pieces</h2></div></div>
+      <div class="masonry" id="pieces"></div>
+    </section>
+  `;
+  $("#pieces").innerHTML = pieces.map(p => productCard(p)).join("");
+  $("#enquire").addEventListener("click", () => {
+    addEnquiry({
+      id: nextEnquiryId(), customerId: D.currentUser.id, shopId: shop.id,
+      productId: pieces[0].id, lookId: look.id, type: "rental",
+      message: `Look enquiry: ${look.name}`, status: "open",
+      createdAt: new Date().toISOString(), intent: "rent",
+    });
+    toast("Enquiry sent for this look");
+  });
+  $("#share").addEventListener("click", async () => {
+    const url = location.href;
+    try { await navigator.clipboard.writeText(url); toast("Link copied"); }
+    catch { toast(url); }
+  });
+  Zivara.syncWishButtons();
+});
+</script>
+</body>
+</html>

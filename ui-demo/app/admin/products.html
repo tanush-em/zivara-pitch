@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Products — Zivara Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/zivara.css">
+</head>
+<body>
+<div class="dash-top"><div><div class="eyebrow">Moderation</div><h1 class="h1">Products</h1></div></div>
+<div class="chips mb-2" id="filters"></div>
+<div class="panel"><div class="table-wrap"><table class="data" id="table"></table></div></div>
+<script src="../assets/js/images.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderDashNav, mountDemoBanner, formatINR, toast, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderDashNav("admin", "products");
+  const KEY = "zivara_admin_products_v1";
+  let products = JSON.parse(localStorage.getItem(KEY) || "null") || D.products.map(p => ({ id:p.id, status:p.status, name:p.name, shopId:p.shopId, rentalPrice:p.rentalPrice, images:p.images, category:p.category }));
+  let filter = "all";
+  const statuses = ["all","pending","approved","rejected","flagged"];
+  $("#filters").innerHTML = statuses.map(s => `<button type="button" class="chip ${s==="all"?"active":""}" data-s="${s}">${s}</button>`).join("");
+
+  function save(){ localStorage.setItem(KEY, JSON.stringify(products)); }
+
+  function render() {
+    const list = filter === "all" ? products : products.filter(p => p.status === filter);
+    $("#table").innerHTML = `
+      <thead><tr><th></th><th>Product</th><th>Shop</th><th>Rent</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>${list.map(p => {
+        const shop = D.getShop(p.shopId);
+        return `<tr>
+          <td><img class="thumb" src="${p.images[0]}" alt="" /></td>
+          <td><strong>${p.name}</strong><div class="muted" style="font-size:11px">${p.category}</div></td>
+          <td>${shop.name}</td>
+          <td>${formatINR(p.rentalPrice)}</td>
+          <td><span class="status ${p.status}">${p.status}</span></td>
+          <td class="row">
+            <button class="btn btn-soft btn-sm" data-id="${p.id}" data-st="approved">Approve</button>
+            <button class="btn btn-ghost btn-sm" data-id="${p.id}" data-st="rejected">Reject</button>
+            <button class="btn btn-ghost btn-sm" data-id="${p.id}" data-st="flagged">Flag</button>
+          </td>
+        </tr>`;
+      }).join("")}</tbody>`;
+  }
+
+  $("#filters").onclick = (e) => {
+    const b = e.target.closest("[data-s]");
+    if (!b) return;
+    filter = b.dataset.s;
+    [...$("#filters").children].forEach(c => c.classList.toggle("active", c === b));
+    render();
+  };
+  document.body.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-st]");
+    if (!b) return;
+    const p = products.find(x => x.id === b.dataset.id);
+    p.status = b.dataset.st;
+    save();
+    toast(`Marked ${b.dataset.st}`);
+    render();
+  });
+  render();
+});
+</script>
+</body>
+</html>

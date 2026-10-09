@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Analytics — Zivara Retailer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/zivara.css">
+</head>
+<body>
+<div class="dash-top">
+  <div><div class="eyebrow">Performance</div><h1 class="h1">Analytics</h1></div>
+</div>
+<div class="kpi-grid" id="kpis"></div>
+<div class="grid-2">
+  <div class="panel"><h3>Demand by occasion</h3><div id="occasions"></div></div>
+  <div class="panel"><h3>Top category</h3><div id="cats"></div></div>
+</div>
+<div class="panel"><h3>Conversion funnel</h3><div class="funnel" id="funnel"></div></div>
+<script src="../assets/js/images.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderDashNav, mountDemoBanner, formatINR, getRetailerBookings, getRetailerEnquiries, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderDashNav("retailer", "analytics");
+  const products = D.productsByShop(D.retailerShopId);
+  const bookings = getRetailerBookings().filter(b => b.shopId === D.retailerShopId);
+  const enquiries = getRetailerEnquiries().filter(e => e.shopId === D.retailerShopId);
+  const views = products.reduce((s,p)=>s+p.views,0);
+  const revenue = bookings.reduce((s,b)=>s+b.rentalTotal,0);
+  const conv = views ? ((bookings.length / views) * 100).toFixed(1) : 0;
+
+  $("#kpis").innerHTML = [
+    ["Views", views.toLocaleString("en-IN")],
+    ["Enquiries", enquiries.length],
+    ["Bookings", bookings.length],
+    ["Revenue", formatINR(revenue)],
+  ].map(([l,v]) => `<div class="kpi"><div class="label">${l}</div><div class="value">${v}</div><div class="delta">Conversion ${conv}%</div></div>`).join("");
+
+  const occ = {};
+  products.forEach(p => p.occasion.forEach(o => { occ[o] = (occ[o]||0) + p.views; }));
+  const maxO = Math.max(...Object.values(occ), 1);
+  $("#occasions").innerHTML = Object.entries(occ).sort((a,b)=>b[1]-a[1]).map(([k,v]) => `
+    <div class="funnel-row"><span>${k}</span><div class="funnel-bar"><span style="width:${(v/maxO)*100}%"></span></div><span>${v}</span></div>`).join("");
+
+  const cats = {};
+  products.forEach(p => { cats[p.category] = (cats[p.category]||0) + p.enquiries; });
+  $("#cats").innerHTML = Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([k,v]) => `
+    <div class="row-between" style="padding:8px 0;border-bottom:1px solid var(--zivara-line)"><strong>${k}</strong><span class="muted">${v} enquiries</span></div>`).join("");
+
+  const funnel = [
+    ["Views", views],
+    ["Enquiries", enquiries.length],
+    ["Bookings", bookings.length],
+    ["Completed", bookings.filter(b=>b.status==="completed").length],
+  ];
+  const maxF = funnel[0][1] || 1;
+  $("#funnel").innerHTML = funnel.map(([l,v]) => `
+    <div class="funnel-row"><span>${l}</span><div class="funnel-bar"><span style="width:${(v/maxF)*100}%"></span></div><span>${v}</span></div>`).join("");
+});
+</script>
+</body>
+</html>

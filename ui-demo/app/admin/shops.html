@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shops — Zivara Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/zivara.css">
+</head>
+<body>
+<div class="dash-top"><div><div class="eyebrow">Supply</div><h1 class="h1">Shops</h1></div></div>
+<div class="panel"><div class="table-wrap"><table class="data" id="table"></table></div></div>
+<script src="../assets/js/images.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderDashNav, mountDemoBanner, formatINR, getRetailerBookings, getRetailerEnquiries, toast, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderDashNav("admin", "shops");
+  const KEY = "zivara_admin_shops_v1";
+  let shops = JSON.parse(localStorage.getItem(KEY) || "null") || D.shops.map(s => ({...s}));
+
+  function save() { localStorage.setItem(KEY, JSON.stringify(shops)); }
+
+  function render() {
+    const bookings = getRetailerBookings();
+    const enquiries = getRetailerEnquiries();
+    $("#table").innerHTML = `
+      <thead><tr><th></th><th>Shop</th><th>Locality</th><th>Products</th><th>Views</th><th>Enquiries</th><th>Bookings</th><th>Status</th><th>Actions</th></tr></thead>
+      <tbody>${shops.map(s => {
+        const views = D.productsByShop(s.id).reduce((a,p)=>a+p.views,0);
+        const enq = enquiries.filter(e=>e.shopId===s.id).length;
+        const bks = bookings.filter(b=>b.shopId===s.id);
+        const rev = bks.reduce((a,b)=>a+b.rentalTotal,0);
+        return `<tr>
+          <td><img class="thumb" src="${s.image}" alt="" /></td>
+          <td><strong>${s.name}</strong>${s.featured?' <span class="tag">featured</span>':''}<div class="muted" style="font-size:11px">Rev ${formatINR(rev)}</div></td>
+          <td>${s.locality}</td>
+          <td>${s.productCount}</td>
+          <td>${views}</td>
+          <td>${enq}</td>
+          <td>${bks.length}</td>
+          <td><span class="status ${s.status}">${s.status}</span></td>
+          <td class="row" style="flex-wrap:wrap">
+            <a class="btn btn-ghost btn-sm" href="../shop.html?id=${s.id}" target="_blank">Inspect</a>
+            <button class="btn btn-soft btn-sm" data-act="approve" data-id="${s.id}">Approve</button>
+            <button class="btn btn-ghost btn-sm" data-act="suspend" data-id="${s.id}">Suspend</button>
+            <button class="btn btn-ghost btn-sm" data-act="feature" data-id="${s.id}">Feature</button>
+          </td>
+        </tr>`;
+      }).join("")}</tbody>`;
+  }
+
+  document.body.addEventListener("click", (e) => {
+    const b = e.target.closest("[data-act]");
+    if (!b) return;
+    const s = shops.find(x => x.id === b.dataset.id);
+    if (b.dataset.act === "approve") { s.status = "active"; toast("Shop approved"); }
+    if (b.dataset.act === "suspend") { s.status = "suspended"; toast("Shop suspended"); }
+    if (b.dataset.act === "feature") { s.featured = !s.featured; toast(s.featured ? "Featured" : "Unfeatured"); }
+    save(); render();
+  });
+  render();
+});
+</script>
+</body>
+</html>

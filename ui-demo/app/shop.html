@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shop — Zivara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/zivara.css">
+</head>
+<body>
+<main id="main">
+  <div class="empty"><div class="h3">Loading…</div></div>
+</main>
+<script src="assets/js/images.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderConsumerNav, mountDemoBanner, qs, productCard, stars, heartSVG, isWished, toast, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderConsumerNav("shops");
+  const shop = D.getShop(qs("id") || "SHOP01");
+  if (!shop) {
+    $("#main").innerHTML = `<div class="empty"><div class="h3">Shop not found</div><a class="btn btn-primary mt-2" href="shops.html">All shops</a></div>`;
+    return;
+  }
+  document.title = `${shop.name} — Zivara`;
+  const catalogue = D.productsByShop(shop.id);
+  const reviews = D.reviews.filter(r => r.shopId === shop.id);
+
+  $("#main").innerHTML = `
+    <section class="hero" style="min-height:48vh">
+      <div class="hero-media"><img src="${shop.image}" alt="${shop.name}" /></div>
+      <div class="hero-scrim"></div>
+      <div class="hero-content">
+        <div class="eyebrow" style="color:rgba(255,252,247,.7)">${shop.locality}, ${shop.city}</div>
+        <h1 class="display" style="font-size:clamp(36px,5vw,64px)">${shop.name}</h1>
+        <p class="lead">★ ${shop.rating} · ${shop.reviewCount} reviews · ${shop.productCount} pieces · ${shop.distanceKm} km</p>
+        <div class="hero-actions">
+          <button class="btn btn-gold" type="button" data-wish="shop" data-id="${shop.id}">Save shop</button>
+          <button class="btn btn-ghost" style="border-color:rgba(255,255,255,.35);color:#fff" type="button" id="contact">Contact</button>
+        </div>
+      </div>
+    </section>
+    <div class="container" style="padding:36px 0 48px">
+      <div class="grid-2">
+        <div>
+          <div class="eyebrow">About</div>
+          <h2 class="h2 mt-1">The store</h2>
+          <p class="muted mt-2">${shop.description}</p>
+          <div class="tag-list mt-2">${shop.categories.map(c=>`<span class="tag">${c}</span>`).join("")}</div>
+          <div class="stack mt-3">
+            <div><strong>Hours</strong><div class="muted">${shop.hours}</div></div>
+            <div><strong>Phone</strong><div class="muted">${shop.phone}</div></div>
+            <div><strong>WhatsApp</strong><div class="muted">${shop.whatsapp}</div></div>
+          </div>
+        </div>
+        <div>
+          <div class="eyebrow">Map</div>
+          <div class="map-placeholder mt-2">Map placeholder · ${shop.locality}, Chennai</div>
+        </div>
+      </div>
+
+      <section class="section" style="padding-bottom:0">
+        <div class="section-head"><div><div class="eyebrow">Catalogue</div><h2 class="h2">Available jewellery</h2></div></div>
+        <div class="masonry" id="cat"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head"><div><div class="eyebrow">Reviews</div><h2 class="h2">What customers say</h2></div></div>
+        <div class="panel">
+          ${reviews.length ? reviews.map(r => `
+            <div class="review">
+              <div class="row-between"><strong>${r.name}</strong><span class="stars">${stars(r.rating)}</span></div>
+              <p class="muted mt-1">${r.text}</p>
+            </div>`).join("") : `<p class="muted">No reviews yet.</p>`}
+        </div>
+      </section>
+    </div>
+  `;
+  $("#cat").innerHTML = catalogue.map(p => productCard(p)).join("");
+  $("#contact").addEventListener("click", () => toast(`Contacting ${shop.whatsapp}… (simulated)`));
+  Zivara.syncWishButtons();
+});
+</script>
+</body>
+</html>

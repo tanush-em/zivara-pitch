@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shop Profile — Zivara Retailer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/zivara.css">
+</head>
+<body>
+<div class="dash-top">
+  <div><div class="eyebrow">Storefront</div><h1 class="h1">Shop profile</h1></div>
+  <a class="btn btn-ghost btn-sm" id="preview" href="#">Preview storefront</a>
+</div>
+<div class="grid-2">
+  <div class="panel" id="form"></div>
+  <div class="panel">
+    <h3>Storefront preview</h3>
+    <div id="card"></div>
+  </div>
+</div>
+<script src="../assets/js/images.js"></script>
+<script src="../assets/js/data.js"></script>
+<script src="../assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderDashNav, mountDemoBanner, toast, shopCard, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderDashNav("retailer", "profile");
+  const shop = { ...D.getShop(D.retailerShopId) };
+  $("#preview").href = `../shop.html?id=${shop.id}`;
+
+  function paint() {
+    $("#form").innerHTML = `
+      <div class="form-row"><label>Shop name</label><input id="name" value="${shop.name}" /></div>
+      <div class="form-row"><label>Locality</label><input id="locality" value="${shop.locality}" /></div>
+      <div class="form-row"><label>Hours</label><input id="hours" value="${shop.hours}" /></div>
+      <div class="form-row"><label>Phone</label><input id="phone" value="${shop.phone}" /></div>
+      <div class="form-row"><label>WhatsApp</label><input id="wa" value="${shop.whatsapp}" /></div>
+      <div class="form-row"><label>About</label><textarea id="desc" rows="5">${shop.description}</textarea></div>
+      <button class="btn btn-primary" type="button" id="save">Save profile</button>`;
+    $("#card").innerHTML = shopCard(shop);
+    $("#save").onclick = () => {
+      shop.name = $("#name").value;
+      shop.locality = $("#locality").value;
+      shop.hours = $("#hours").value;
+      shop.phone = $("#phone").value;
+      shop.whatsapp = $("#wa").value;
+      shop.description = $("#desc").value;
+      toast("Shop profile saved (demo)");
+      $("#card").innerHTML = shopCard(shop);
+    };
+  }
+  paint();
+});
+</script>
+</body>
+</html>
