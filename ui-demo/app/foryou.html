@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>For You — Zivara</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/zivara.css">
+</head>
+<body>
+<main class="container" style="padding-top:20px;padding-bottom:64px">
+  <div class="section-head" style="margin-bottom:8px">
+    <div>
+      <div class="eyebrow">For You</div>
+      <h1 class="h1">Your daily discovery</h1>
+      <p class="lead">An endless visual feed of jewellery, looks and inspiration.</p>
+    </div>
+  </div>
+
+  <div class="pin-chips" id="chips" role="tablist" aria-label="Filter feed"></div>
+  <div class="pin-grid" id="feed"></div>
+  <div class="pin-sentinel" id="sentinel">Scroll for more</div>
+</main>
+
+<script src="assets/js/images.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/app.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const { renderConsumerNav, mountDemoBanner, pinCard, $ } = Zivara;
+  const D = ZivaraData;
+  mountDemoBanner();
+  renderConsumerNav("foryou");
+
+  const BATCH = 18;
+  const chips = [
+    { id: "all", label: "All" },
+    { id: "wedding", label: "Wedding" },
+    { id: "temple", label: "Temple" },
+    { id: "kundan", label: "Kundan" },
+    { id: "looks", label: "Looks" },
+    { id: "festival", label: "Festival" },
+    { id: "under2000", label: "Under ₹2,000" },
+    { id: "inspiration", label: "Inspiration" },
+  ];
+
+  let activeChip = "all";
+  let pool = [];
+  let cursor = 0;
+  let loading = false;
+
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function buildPool(chip) {
+    const products = D.products.map((p) => ({ ...p, _type: "product" }));
+    const looks = D.looks.map((l) => ({ ...l, _type: "look" }));
+    const editorial = D.editorial.map((e) => ({ ...e, _type: "editorial" }));
+
+    if (chip === "looks") return shuffle(looks);
+    if (chip === "inspiration") return shuffle(editorial);
+    if (chip === "under2000") {
+      return shuffle([
+        ...products.filter((p) => p.rentalPrice <= 2000),
+        ...looks.filter((l) => l.rentalPrice <= 2000),
+      ]);
+    }
+    if (chip === "wedding" || chip === "festival") {
+      return shuffle([
+        ...products.filter((p) => p.occasion.some((o) => o.includes(chip))),
+        ...looks.filter((l) => l.occasion.includes(chip) || chip.includes(l.occasion)),
+      ]);
+    }
+    if (chip === "temple" || chip === "kundan") {
+      return shuffle([
+        ...products.filter((p) => p.style.some((s) => s.includes(chip))),
+        ...looks.filter((l) => l.style.some((s) => s.includes(chip))),
+      ]);
+    }
+    return shuffle([...products, ...looks, ...editorial]);
+  }
+
+  function renderChips() {
+    $("#chips").innerHTML = chips.map((c) =>
+      `<button type="button" class="chip ${c.id === activeChip ? "active" : ""}" data-chip="${c.id}" role="tab" aria-selected="${c.id === activeChip}">${c.label}</button>`
+    ).join("");
+  }
+
+  function resetFeed() {
+    pool = buildPool(activeChip);
+    cursor = 0;
+    $("#feed").innerHTML = "";
+    appendBatch();
+  }
+
+  function appendBatch() {
+    if (loading) return;
+    if (!pool.length) {
+      $("#sentinel").textContent = "Nothing in this vibe — try another filter";
+      return;
+    }
+    loading = true;
+    const slice = [];
+    for (let i = 0; i < BATCH; i++) {
+      slice.push(pool[cursor % pool.length]);
+      cursor++;
+    }
+    const html = slice.map(pinCard).join("");
+    $("#feed").insertAdjacentHTML("beforeend", html);
+    Zivara.syncWishButtons($("#feed"));
+    $("#sentinel").textContent = "Scroll for more";
+    requestAnimationFrame(() => { loading = false; });
+  }
+
+  renderChips();
+  $("#chips").addEventListener("click", (e) => {
+    const b = e.target.closest("[data-chip]");
+    if (!b) return;
+    activeChip = b.dataset.chip;
+    renderChips();
+    resetFeed();
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    if (entries.some((en) => en.isIntersecting)) appendBatch();
+  }, { rootMargin: "320px" });
+  observer.observe($("#sentinel"));
+
+  resetFeed();
+});
+</script>
+</body>
+</html>

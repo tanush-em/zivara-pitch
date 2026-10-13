@@ -69,8 +69,12 @@
       const id = btn.dataset.id;
       const on = isWished(type, id);
       btn.classList.toggle("saved", on);
-      btn.innerHTML = heartSVG(on);
       btn.setAttribute("aria-pressed", on ? "true" : "false");
+      if (btn.classList.contains("pin-save")) {
+        btn.textContent = on ? "Saved" : "Save";
+      } else {
+        btn.innerHTML = heartSVG(on);
+      }
     });
   }
 
@@ -182,6 +186,7 @@
     const base = basePath();
     const links = [
       { href: "index.html", label: "Discover", id: "home" },
+      { href: "foryou.html", label: "For You", id: "foryou" },
       { href: "explore.html", label: "Jewellery", id: "explore" },
       { href: "looks.html", label: "Looks", id: "looks" },
       { href: "shops.html", label: "Shops", id: "shops" },
@@ -213,7 +218,7 @@
     bottom.setAttribute("aria-label", "Mobile");
     const mobile = [
       { href: "index.html", label: "Home", id: "home", icon: icons.home },
-      { href: "explore.html", label: "Explore", id: "explore", icon: icons.explore },
+      { href: "foryou.html", label: "For You", id: "foryou", icon: icons.explore },
       { href: "shops.html", label: "Shops", id: "shops", icon: icons.shops },
       { href: "wishlist.html", label: "Wishlist", id: "wishlist", icon: icons.heart },
       { href: "profile.html", label: "Profile", id: "profile", icon: icons.user },
@@ -334,6 +339,92 @@
           <div class="media">
             <img src="${e.hero}" alt="${e.title}" loading="lazy" />
             <div class="overlay-text"><div class="eyebrow" style="color:#fff">Inspiration</div><div class="h3">${e.title}</div></div>
+          </div>
+        </a>
+      </article>`;
+  }
+
+  /* Seeded height class so pins stay stable across re-renders */
+  function pinHeightClass(id) {
+    const heights = ["h-s", "h-m", "h-l", "h-xl"];
+    let hash = 0;
+    const s = String(id || "");
+    for (let i = 0; i < s.length; i++) hash = ((hash << 5) - hash + s.charCodeAt(i)) | 0;
+    return heights[Math.abs(hash) % heights.length];
+  }
+
+  function pinCard(item) {
+    const type = item._type || (item.rentalPrice != null && item.images ? "product" : item.heroImage ? "look" : "editorial");
+    const id = item.id;
+    const height = pinHeightClass(id);
+    const base = basePath();
+
+    if (type === "product") {
+      const saved = isWished("product", id);
+      const href = `${base}product.html?id=${id}`;
+      const shop = D().getShop(item.shopId);
+      return `
+        <article class="pin-card">
+          <a class="pin-media ${height}" href="${href}">
+            <img src="${item.images[0]}" alt="${item.name}" loading="lazy" />
+            ${item.trending ? '<span class="pin-badge">Trending</span>' : item.newArrival ? '<span class="pin-badge">New</span>' : ""}
+            <div class="pin-overlay">
+              <button type="button" class="pin-save ${saved ? "saved" : ""}" data-wish="product" data-id="${id}" aria-pressed="${saved}">${saved ? "Saved" : "Save"}</button>
+              <div class="pin-overlay-bottom">
+                <div class="pin-meta">
+                  <div class="name">${item.name}</div>
+                  <div class="price">Rent ${formatINR(item.rentalPrice)}${shop ? ` · ${shop.name}` : ""}</div>
+                </div>
+                <span class="pin-quick" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+                </span>
+              </div>
+            </div>
+          </a>
+        </article>`;
+    }
+
+    if (type === "look") {
+      const saved = isWished("look", id);
+      const href = `${base}look.html?id=${id}`;
+      return `
+        <article class="pin-card">
+          <a class="pin-media ${height}" href="${href}">
+            <img src="${item.heroImage}" alt="${item.name}" loading="lazy" />
+            <span class="pin-badge">Look</span>
+            <div class="pin-overlay">
+              <button type="button" class="pin-save ${saved ? "saved" : ""}" data-wish="look" data-id="${id}" aria-pressed="${saved}">${saved ? "Saved" : "Save"}</button>
+              <div class="pin-overlay-bottom">
+                <div class="pin-meta">
+                  <div class="name">${item.name}</div>
+                  <div class="price">Bundle ${formatINR(item.rentalPrice)}</div>
+                </div>
+                <span class="pin-quick" aria-hidden="true">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+                </span>
+              </div>
+            </div>
+          </a>
+        </article>`;
+    }
+
+    /* editorial */
+    return `
+      <article class="pin-card">
+        <a class="pin-media ${height}" href="${base}explore.html">
+          <img src="${item.hero}" alt="${item.title || "Inspiration"}" loading="lazy" />
+          <span class="pin-badge">Inspiration</span>
+          <div class="pin-overlay">
+            <span></span>
+            <div class="pin-overlay-bottom">
+              <div class="pin-meta">
+                <div class="name">${item.title || "Inspiration"}</div>
+                <div class="price">Editorial</div>
+              </div>
+              <span class="pin-quick" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>
+              </span>
+            </div>
           </div>
         </a>
       </article>`;
@@ -502,8 +593,137 @@
     if ($(".demo-banner")) return;
     const b = document.createElement("div");
     b.className = "demo-banner";
-    b.innerHTML = `Zivara demo · fake data · no real payments · <a href="${basePath()}index.html">Consumer</a> · <a href="${basePath()}retailer/index.html">Retailer</a> · <a href="${basePath()}admin/index.html">Admin</a>`;
+    const compact = isInIframe || window.matchMedia("(max-width: 480px)").matches;
+    b.innerHTML = compact
+      ? `Zivara demo · <a href="${basePath()}index.html">Consumer</a> · <a href="${basePath()}retailer/index.html">Retailer</a> · <a href="${basePath()}admin/index.html">Admin</a>`
+      : `Zivara demo · fake data · no real payments · <a href="${basePath()}index.html">Consumer</a> · <a href="${basePath()}retailer/index.html">Retailer</a> · <a href="${basePath()}admin/index.html">Admin</a>`;
     document.body.prepend(b);
+  }
+
+  /* Device preview — Desktop / Mobile toggle with iOS phone frame */
+  const DEVICE_KEY = "zivara_device_mode";
+  const isInIframe = (() => {
+    try { return window.self !== window.top; } catch { return true; }
+  })();
+
+  function getDeviceMode() {
+    try {
+      const v = localStorage.getItem(DEVICE_KEY);
+      return v === "mobile" ? "mobile" : "desktop";
+    } catch {
+      return "desktop";
+    }
+  }
+
+  function setDeviceMode(mode) {
+    try { localStorage.setItem(DEVICE_KEY, mode); } catch { /* ignore */ }
+  }
+
+  function formatStatusTime() {
+    const d = new Date();
+    return d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true }).replace(/\s?(AM|PM)/i, "");
+  }
+
+  function statusIconsSVG() {
+    return `
+      <svg class="zv-sig" width="17" height="12" viewBox="0 0 17 12" aria-hidden="true">
+        <rect x="0" y="7.5" width="3" height="4" rx="0.6" fill="currentColor"/>
+        <rect x="4.5" y="5" width="3" height="6.5" rx="0.6" fill="currentColor"/>
+        <rect x="9" y="2.5" width="3" height="9" rx="0.6" fill="currentColor"/>
+        <rect x="13.5" y="0" width="3" height="11.5" rx="0.6" fill="currentColor" opacity="0.35"/>
+      </svg>
+      <svg class="zv-wifi" width="16" height="12" viewBox="0 0 16 12" aria-hidden="true">
+        <path d="M8 9.8a1.4 1.4 0 1 1 0 2.8 1.4 1.4 0 0 1 0-2.8z" fill="currentColor"/>
+        <path d="M4.2 8.2a5.4 5.4 0 0 1 7.6 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M1.6 5.4a9 9 0 0 1 12.8 0" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span class="zv-battery" aria-hidden="true">
+        <span class="zv-battery-body"><span class="zv-battery-level"></span></span>
+        <span class="zv-battery-cap"></span>
+      </span>`;
+  }
+
+  function fitPhoneToViewport(phone) {
+    if (!phone) return;
+    const pad = 48;
+    const naturalW = 414; /* bezel + screen */
+    const naturalH = 868;
+    const scale = Math.min(1, (window.innerWidth - pad) / naturalW, (window.innerHeight - pad) / naturalH);
+    phone.style.transform = `scale(${Math.max(0.45, scale)})`;
+  }
+
+  function buildDeviceOverlay() {
+    if ($(".zv-device-overlay")) return;
+    const overlay = document.createElement("div");
+    overlay.className = "zv-device-overlay";
+    overlay.innerHTML = `
+      <div class="zv-phone" role="presentation">
+        <div class="zv-phone-bezel">
+          <div class="zv-island" aria-hidden="true"></div>
+          <div class="zv-statusbar">
+            <span class="zv-time">${formatStatusTime()}</span>
+            <span class="zv-status-icons">${statusIconsSVG()}</span>
+          </div>
+          <iframe class="zv-screen" title="Zivara mobile preview" src="${location.href}"></iframe>
+        </div>
+      </div>`;
+    document.body.appendChild(overlay);
+    document.documentElement.classList.add("zv-device-mode");
+
+    const phone = overlay.querySelector(".zv-phone");
+    fitPhoneToViewport(phone);
+    window.addEventListener("resize", () => fitPhoneToViewport(phone));
+
+    const timeEl = overlay.querySelector(".zv-time");
+    setInterval(() => {
+      if (timeEl) timeEl.textContent = formatStatusTime();
+    }, 30000);
+  }
+
+  function removeDeviceOverlay() {
+    const overlay = $(".zv-device-overlay");
+    if (overlay) overlay.remove();
+    document.documentElement.classList.remove("zv-device-mode");
+  }
+
+  function syncToggleUI(mode) {
+    const toggle = $(".zv-device-toggle");
+    if (!toggle) return;
+    toggle.querySelectorAll("[data-mode]").forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.mode === mode);
+      btn.setAttribute("aria-pressed", btn.dataset.mode === mode ? "true" : "false");
+    });
+  }
+
+  function mountDeviceToggle() {
+    if (isInIframe) {
+      document.documentElement.classList.add("zv-inner");
+      return;
+    }
+    if ($(".zv-device-toggle")) return;
+
+    const toggle = document.createElement("div");
+    toggle.className = "zv-device-toggle";
+    toggle.setAttribute("role", "group");
+    toggle.setAttribute("aria-label", "Device preview");
+    toggle.innerHTML = `
+      <button type="button" data-mode="desktop" aria-pressed="false">Desktop</button>
+      <button type="button" data-mode="mobile" aria-pressed="false">Mobile</button>`;
+    document.body.appendChild(toggle);
+
+    const mode = getDeviceMode();
+    syncToggleUI(mode);
+    if (mode === "mobile") buildDeviceOverlay();
+
+    toggle.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-mode]");
+      if (!btn) return;
+      const next = btn.dataset.mode;
+      if (next === getDeviceMode()) return;
+      setDeviceMode(next);
+      /* Reload so the iframe (or full desktop page) starts clean */
+      location.reload();
+    });
   }
 
   function nextBookingId() {
@@ -520,13 +740,22 @@
     getUserBookings, addUserBooking,
     getRetailerBookings, updateRetailerBooking,
     getRetailerEnquiries, updateRetailerEnquiry, addEnquiry,
-    renderConsumerNav, renderDashNav, mountDemoBanner,
-    productCard, lookCard, shopCard, editorialCard,
+    renderConsumerNav, renderDashNav, mountDemoBanner, mountDeviceToggle,
+    productCard, lookCard, shopCard, editorialCard, pinCard,
     interpretQuery, filterProducts, scoreProduct, recommendLooks, runAIProcess,
     basePath, nextBookingId, nextEnquiryId,
   };
 
-  document.addEventListener("DOMContentLoaded", () => {
-    syncWishButtons();
-  });
+  function bootDevicePreview() {
+    mountDeviceToggle();
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+      bootDevicePreview();
+      syncWishButtons();
+    });
+  } else {
+    bootDevicePreview();
+    document.addEventListener("DOMContentLoaded", () => syncWishButtons());
+  }
 })();
